@@ -55,7 +55,8 @@
                             <option value="">-- Select Country --</option>
 
                             @foreach($countries as $country)
-                                <option value="{{ $country->id }}" {{ old('country_id', $supplier->country_id) == $country->id ? 'selected' : '' }}>
+                                <option value="{{ $country->id }}"
+                                    {{ old('country_id', $supplier->country_id) == $country->id ? 'selected' : '' }}>
                                     {{ $country->name }}
                                 </option>
                             @endforeach
@@ -84,8 +85,7 @@
                             type="email"
                             name="email"
                             class="form-control"
-                            value="{{ old('email', $supplier->email) }}"
-                            required>
+                            value="{{ old('email', $supplier->email) }}">
                     </div>
                 </div>
 
@@ -96,8 +96,7 @@
                             type="text"
                             name="phone"
                             class="form-control"
-                            value="{{ old('phone', $supplier->phone) }}"
-                            required>
+                            value="{{ old('phone', $supplier->phone) }}">
                     </div>
                 </div>
             </div>
@@ -107,8 +106,7 @@
                 <textarea
                     name="address"
                     rows="4"
-                    class="form-control"
-                    required>{{ old('address', $supplier->address) }}</textarea>
+                    class="form-control">{{ old('address', $supplier->address) }}</textarea>
             </div>
 
             <div class="row">
@@ -118,16 +116,14 @@
                         <select name="supply_status" class="form-control" required>
                             <option value="">-- Select Supply Status --</option>
 
-                            <option value="Stable" {{ old('supply_status', $supplier->supply_status) == 'Stable' ? 'selected' : '' }}>
-                                🟢 Stable
+                            <option value="Active"
+                                {{ old('supply_status', $supplier->supply_status) == 'Active' ? 'selected' : '' }}>
+                                🟢 Active
                             </option>
 
-                            <option value="Delayed" {{ old('supply_status', $supplier->supply_status) == 'Delayed' ? 'selected' : '' }}>
-                                🟡 Delayed
-                            </option>
-
-                            <option value="Critical" {{ old('supply_status', $supplier->supply_status) == 'Critical' ? 'selected' : '' }}>
-                                🔴 Critical
+                            <option value="Inactive"
+                                {{ old('supply_status', $supplier->supply_status) == 'Inactive' ? 'selected' : '' }}>
+                                🔴 Inactive
                             </option>
                         </select>
                     </div>

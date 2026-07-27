@@ -339,9 +339,11 @@ return [
     */
 'menu' => [
 
-    // ===========================
-    // DASHBOARD
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    */
 
     [
         'text' => 'Dashboard',
@@ -349,122 +351,148 @@ return [
         'icon' => 'fas fa-home',
         'label' => 'NEW',
         'label_color' => 'success',
-        'active' => ['dashboard'],
     ],
 
     [
         'text' => 'Analytics',
         'route' => 'analytics',
-        'icon' => 'fas fa-chart-pie',
+        'icon' => 'fas fa-chart-line',
         'label' => 'LIVE',
         'label_color' => 'danger',
-        'active' => ['analytics'],
     ],
 
-    // ===========================
-    // MASTER DATA
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | MASTER DATA
+    |--------------------------------------------------------------------------
+    */
 
     [
-        'text' => 'Master Data',
-        'icon' => 'fas fa-database',
-        'label' => '4',
-        'label_color' => 'primary',
-
-        'submenu' => [
-
-            [
-                'text' => 'Countries',
-                'route' => 'countries.index',
-                'icon' => 'fas fa-globe-americas',
-                'active' => ['countries', 'countries/*'],
-            ],
-
-            [
-                'text' => 'Suppliers',
-                'route' => 'suppliers.index',
-                'icon' => 'fas fa-shipping-fast',
-                'active' => ['suppliers', 'suppliers/*'],
-            ],
-
-            [
-                'text' => 'Products',
-                'route' => 'products.index',
-                'icon' => 'fas fa-boxes',
-                'active' => ['products', 'products/*'],
-            ],
-
-            [
-                'text' => 'Users',
-                'route' => 'users.index',
-                'icon' => 'fas fa-user-friends',
-                'active' => ['users', 'users/*'],
-            ],
-
-        ],
-
+        'header' => 'MASTER DATA',
     ],
 
-    // ===========================
-    // MONITORING
-    // ===========================
+    [
+        'text' => 'Countries',
+        'route' => 'countries.index',
+        'icon' => 'fas fa-globe-americas',
+    ],
+
+    [
+        'text' => 'Suppliers',
+        'route' => 'suppliers.index',
+        'icon' => 'fas fa-truck',
+    ],
+
+    [
+        'text' => 'Products',
+        'route' => 'products.index',
+        'icon' => 'fas fa-box-open',
+    ],
+
+    [
+        'text' => 'Users',
+        'route' => 'users.index',
+        'icon' => 'fas fa-users',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | MONITORING
+    |--------------------------------------------------------------------------
+    */
+
+    [
+        'header' => 'MONITORING',
+    ],
 
     [
         'text' => 'Monitoring',
+        'route' => 'monitoring',
         'icon' => 'fas fa-chart-area',
-        'label' => '3',
-        'label_color' => 'warning',
-
-        'submenu' => [
-
-            [
-                'text' => 'World Map',
-                'route' => 'world.map',
-                'icon' => 'fas fa-globe',
-            ],
-
-            [
-                'text' => 'Global Alert',
-                'route' => 'global.alert',
-                'icon' => 'fas fa-exclamation-triangle',
-            ],
-
-            [
-                'text' => 'Notifications',
-                'route' => 'notifications',
-                'icon' => 'fas fa-bell',
-            ],
-
-        ],
-
     ],
 
-    // ===========================
-    // INFORMATION
-    // ===========================
+    [
+        'text' => 'World Map',
+        'route' => 'world.map',
+        'icon' => 'fas fa-globe',
+    ],
 
     [
-        'text' => 'Information',
+        'text' => 'Global Alert',
+        'route' => 'global.alert',
+        'icon' => 'fas fa-exclamation-triangle',
+    ],
+
+    [
+        'text' => 'Notifications',
+        'route' => 'notifications',
+        'icon' => 'fas fa-bell',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | REPORTS
+    |--------------------------------------------------------------------------
+    */
+
+    [
+        'header' => 'REPORTS',
+    ],
+
+    [
+        'text' => 'Reports',
+        'route' => 'reports.index',
+        'icon' => 'fas fa-file-alt',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | INFORMATION
+    |--------------------------------------------------------------------------
+    */
+
+    [
+        'header' => 'INFORMATION',
+    ],
+
+    [
+        'text' => 'News',
+        'route' => 'news.index',
+        'icon' => 'fas fa-newspaper',
+    ],
+
+    [
+        'text' => 'Search',
+        'route' => 'search',
+        'icon' => 'fas fa-search',
+    ],
+
+    [
+        'text' => 'About',
+        'route' => 'about',
         'icon' => 'fas fa-info-circle',
-        'label' => '2',
-        'label_color' => 'info',
+    ],
 
-        'submenu' => [
+    /*
+    |--------------------------------------------------------------------------
+    | SYSTEM
+    |--------------------------------------------------------------------------
+    */
 
-            [
-                'text' => 'News',
-                'route' => 'news.index',
-                'icon' => 'fas fa-newspaper',
-            ],
+    [
+        'header' => 'SYSTEM',
+    ],
 
-            [
-                'text' => 'Search',
-                'route' => 'search',
-                'icon' => 'fas fa-search',
-            ],
+    [
+        'text' => 'Profile',
+        'route' => 'profile.edit',
+        'icon' => 'fas fa-user-cog',
+    ],
 
-        ],
-
+    [
+        'text' => 'Clear Cache',
+        'route' => 'clear.cache',
+        'icon' => 'fas fa-broom',
     ],
 
     // ===========================

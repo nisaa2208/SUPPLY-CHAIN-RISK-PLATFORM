@@ -7,46 +7,49 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-
     use HasFactory;
 
-
     protected $fillable = [
-
         'country_id',
         'name',
         'email',
         'phone',
         'address',
         'supply_status',
-        'risk_score'
-
+        'risk_score',
     ];
 
+    protected $casts = [
+        'risk_score' => 'integer',
+    ];
 
-    //=========================
-    // RELATIONSHIP
-    //=========================
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function country()
     {
-
-        return $this->belongsTo(
-            Country::class
-        );
-
+        return $this->belongsTo(Country::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Accessors
+    |--------------------------------------------------------------------------
+    */
 
-
-    public function products()
+    public function getRiskLevelAttribute()
     {
+        if ($this->risk_score >= 80) {
+            return 'High';
+        }
 
-        return $this->hasMany(
-            Product::class
-        );
+        if ($this->risk_score >= 50) {
+            return 'Medium';
+        }
 
+        return 'Low';
     }
-
-
 }

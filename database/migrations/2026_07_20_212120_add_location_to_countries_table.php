@@ -1,35 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up()
     {
-        Schema::table('countries', function (Blueprint $table) {
-
-            $table->decimal('latitude', 10, 7)
-                ->nullable()
-                ->after('capital');
-
-            $table->decimal('longitude', 10, 7)
-                ->nullable()
-                ->after('latitude');
-
-        });
+        // Latitude dan Longitude sudah ada
+        // di create_countries_table, jadi migration ini dikosongkan.
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down()
     {
-        Schema::table('countries', function (Blueprint $table) {
-
-            $table->dropColumn([
-                'latitude',
-                'longitude'
-            ]);
-
-        });
+        // Tidak ada yang perlu dihapus.
     }
 };

@@ -9,221 +9,110 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-
-    //=================================
-    // DISPLAY ALL PRODUCTS
-    //=================================
-
+    /**
+     * Display all products.
+     */
     public function index()
     {
-        $products = Product::latest()->get();
+        $products = Product::with(['country', 'supplier'])
+            ->latest()
+            ->paginate(10);
 
-        return view(
-            'products.index',
-            compact('products')
-        );
+        return view('products.index', compact('products'));
     }
 
-
-
-    //=================================
-    // FORM CREATE PRODUCT
-    //=================================
-
+    /**
+     * Show create form.
+     */
     public function create()
     {
-        $countries = Country::all();
+        $countries = Country::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        $suppliers = Supplier::all();
-
-        return view(
-            'products.create',
-            compact(
-                'countries',
-                'suppliers'
-            )
-        );
+        return view('products.create', compact(
+            'countries',
+            'suppliers'
+        ));
     }
 
-
-
-    //=================================
-    // STORE PRODUCT
-    //=================================
-
+    /**
+     * Store product.
+     */
     public function store(Request $request)
     {
-        $request->validate(
+        $request->validate([
+            'country_id'      => 'required|exists:countries,id',
+            'supplier_id'     => 'required|exists:suppliers,id',
+            'name'            => 'required|max:255',
+            'category'        => 'required|max:255',
+            'stock'           => 'required|integer|min:0',
+            'shipping_status' => 'required|in:Normal,Delayed,Critical',
+            'risk_score'      => 'required|integer|min:0|max:100',
+        ]);
 
-            [
-
-                'country_id'       => 'required',
-                'supplier_id'      => 'required',
-                'name'             => 'required',
-                'category'         => 'required',
-                'stock'            => 'required|numeric',
-                'shipping_status'  => 'required',
-                'risk_score'       => 'required|numeric',
-
-            ],
-
-            [
-
-                'country_id.required'
-                => 'Silahkan pilih Country.',
-
-                'supplier_id.required'
-                => 'Silahkan pilih Supplier.',
-
-                'name.required'
-                => 'Nama Product wajib diisi.',
-
-                'category.required'
-                => 'Category wajib diisi.',
-
-                'stock.required'
-                => 'Stock wajib diisi.',
-
-                'stock.numeric'
-                => 'Stock harus berupa angka.',
-
-                'shipping_status.required'
-                => 'Silahkan pilih Shipping Status.',
-
-                'risk_score.required'
-                => 'Risk Score wajib diisi.',
-
-                'risk_score.numeric'
-                => 'Risk Score harus berupa angka.',
-
-            ]
-
-        );
-
-
-        Product::create(
-
-            $request->all()
-
-        );
-
+        Product::create($request->all());
 
         return redirect()
-                ->route('products.index')
-                ->with(
-                    'success',
-                    'Product berhasil ditambahkan.'
-                );
+            ->route('products.index')
+            ->with('success', 'Product berhasil ditambahkan.');
     }
 
-
-
-
-    //=================================
-    // DETAIL PRODUCT
-    //=================================
-
+    /**
+     * Display detail.
+     */
     public function show(Product $product)
     {
-        return view(
-            'products.show',
-            compact('product')
-        );
+        $product->load(['country', 'supplier']);
+
+        return view('products.show', compact('product'));
     }
 
-
-
-
-    //=================================
-    // FORM EDIT PRODUCT
-    //=================================
-
+    /**
+     * Show edit form.
+     */
     public function edit(Product $product)
     {
-        $countries = Country::all();
+        $countries = Country::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        $suppliers = Supplier::all();
-
-
-        return view(
-            'products.edit',
-
-            compact(
-
-                'product',
-                'countries',
-                'suppliers'
-
-            )
-        );
+        return view('products.edit', compact(
+            'product',
+            'countries',
+            'suppliers'
+        ));
     }
 
-
-
-
-    //=================================
-    // UPDATE PRODUCT
-    //=================================
-
-    public function update(
-        Request $request,
-        Product $product
-    )
+    /**
+     * Update product.
+     */
+    public function update(Request $request, Product $product)
     {
+        $request->validate([
+            'country_id'      => 'required|exists:countries,id',
+            'supplier_id'     => 'required|exists:suppliers,id',
+            'name'            => 'required|max:255',
+            'category'        => 'required|max:255',
+            'stock'           => 'required|integer|min:0',
+            'shipping_status' => 'required|in:Normal,Delayed,Critical',
+            'risk_score'      => 'required|integer|min:0|max:100',
+        ]);
 
-        $request->validate(
-
-            [
-
-                'country_id'       => 'required',
-                'supplier_id'      => 'required',
-                'name'             => 'required',
-                'category'         => 'required',
-                'stock'            => 'required|numeric',
-                'shipping_status'  => 'required',
-                'risk_score'       => 'required|numeric',
-
-            ]
-
-        );
-
-
-        $product->update(
-
-            $request->all()
-
-        );
-
+        $product->update($request->all());
 
         return redirect()
-                ->route('products.index')
-                ->with(
-                    'success',
-                    'Product berhasil diupdate.'
-                );
-
+            ->route('products.index')
+            ->with('success', 'Product berhasil diperbarui.');
     }
 
-
-
-
-    //=================================
-    // DELETE PRODUCT
-    //=================================
-
+    /**
+     * Delete product.
+     */
     public function destroy(Product $product)
     {
-
         $product->delete();
 
-
         return redirect()
-                ->route('products.index')
-                ->with(
-                    'success',
-                    'Product berhasil dihapus.'
-                );
-
+            ->route('products.index')
+            ->with('success', 'Product berhasil dihapus.');
     }
-
 }

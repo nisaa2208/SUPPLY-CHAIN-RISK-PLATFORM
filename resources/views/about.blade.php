@@ -1,103 +1,73 @@
 @extends('adminlte::page')
 
-@section('title', 'About System')
+@section('title', 'About')
 
 @section('content_header')
 <h1>
     <i class="fas fa-info-circle text-primary"></i>
-    About System
+    About Application
 </h1>
 @stop
 
 @section('content')
 
-<div class="card">
+<div class="row">
 
-    <div class="card-header bg-primary">
+    <div class="col-md-12">
 
-        <h3 class="card-title">
-            Global Supply Chain Risk Intelligence Platform
-        </h3>
+        <div class="card shadow">
 
-    </div>
+            <div class="card-body text-center">
 
-    <div class="card-body">
+                <i class="fas fa-globe fa-5x text-primary mb-3"></i>
 
-        <h4>Project Information</h4>
+                <h2 class="font-weight-bold">
+                    Global Supply Chain Risk Dashboard
+                </h2>
 
-        <table class="table table-bordered">
+                <p class="text-muted">
+                    Risk Monitoring & Analytics System
+                </p>
 
-            <tr>
-                <th width="250">Application Name</th>
-                <td>Global Supply Chain Risk Intelligence Platform</td>
-            </tr>
+                <hr>
 
-            <tr>
-                <th>Framework</th>
-                <td>Laravel 9</td>
-            </tr>
+                <table class="table table-bordered">
 
-            <tr>
-                <th>Template</th>
-                <td>AdminLTE 3</td>
-            </tr>
+                    <tr>
+                        <th width="30%">Application</th>
+                        <td>Global Supply Chain Risk Dashboard</td>
+                    </tr>
 
-            <tr>
-                <th>Database</th>
-                <td>MySQL</td>
-            </tr>
+                    <tr>
+                        <th>Framework</th>
+                        <td>Laravel 9</td>
+                    </tr>
 
-            <tr>
-                <th>Programming Language</th>
-                <td>PHP 8</td>
-            </tr>
+                    <tr>
+                        <th>Template</th>
+                        <td>AdminLTE 3</td>
+                    </tr>
 
-        </table>
+                    <tr>
+                        <th>Database</th>
+                        <td>MySQL</td>
+                    </tr>
 
-        <br>
+                    <tr>
+                        <th>Language</th>
+                        <td>PHP 8</td>
+                    </tr>
 
-        <h4>Main Features</h4>
+                    <tr>
+                        <th>Version</th>
+                        <td>1.0</td>
+                    </tr>
 
-        <ul>
+                </table>
 
-            <li>Dashboard Monitoring</li>
+            </div>
 
-            <li>Countries Management</li>
-
-            <li>Supplier Management</li>
-
-            <li>Product Management</li>
-
-            <li>Global Risk Alert</li>
-
-            <li>World Map Visualization</li>
-
-            <li>Analytics Dashboard</li>
-
-            <li>REST API Integration</li>
-
-            <li>Weather Information</li>
-
-            <li>Exchange Rate Monitoring</li>
-
-            <li>World Bank API</li>
-
-            <li>Global News</li>
-
-            <li>PDF & Excel Export</li>
-
-        </ul>
-
-        <hr>
-
-        <h4>Developer</h4>
-
-        <p>
-
-            This application was developed as a final project for the
-            Supply Chain Management course using Laravel Framework.
-
-        </p>
+        </div>
 
     </div>
 

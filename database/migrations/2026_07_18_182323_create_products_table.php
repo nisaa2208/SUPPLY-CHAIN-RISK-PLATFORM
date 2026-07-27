@@ -6,47 +6,41 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
-    public function up()
+    public function up(): void
     {
-
         Schema::create('products', function (Blueprint $table) {
 
             $table->id();
 
-
             $table->foreignId('country_id')
-                    ->constrained()
-                    ->onDelete('cascade');
-
+                ->constrained('countries')
+                ->cascadeOnDelete();
 
             $table->foreignId('supplier_id')
-                    ->constrained()
-                    ->onDelete('cascade');
-
+                ->constrained('suppliers')
+                ->cascadeOnDelete();
 
             $table->string('name');
 
             $table->string('category');
 
-            $table->integer('stock');
+            $table->integer('stock')->default(0);
 
-            $table->string('shipping_status');
+            $table->enum('shipping_status',[
+                'Normal',
+                'Delayed',
+                'Critical'
+            ])->default('Normal');
 
-            $table->integer('risk_score');
+            $table->integer('risk_score')->default(0);
 
             $table->timestamps();
 
         });
-
     }
 
-
-    public function down()
+    public function down(): void
     {
-
         Schema::dropIfExists('products');
-
     }
-
 };

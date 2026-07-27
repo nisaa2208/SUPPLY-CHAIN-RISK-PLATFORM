@@ -8,67 +8,63 @@ use App\Models\Supplier;
 
 class ExportController extends Controller
 {
-
-    //=================================
-    // EXPORT PDF
-    //=================================
-
+    /**
+     * Export PDF (Print View)
+     */
     public function exportPDF()
     {
+        $countries = Country::orderBy('name')->get();
+        $suppliers = Supplier::with('country')->orderBy('name')->get();
+        $products = Product::with(['country', 'supplier'])->orderBy('name')->get();
 
-        $countries = Country::all();
-
-        $suppliers = Supplier::all();
-
-        $products = Product::all();
-
-
-        return view(
-
-            'export.pdf',
-
-            compact(
-
-                'countries',
-                'suppliers',
-                'products'
-
-            )
-
-        );
-
+        return view('exports.pdf', compact(
+            'countries',
+            'suppliers',
+            'products'
+        ));
     }
 
-
-
-    //=================================
-    // EXPORT EXCEL
-    //=================================
-
+    /**
+     * Export Excel (CSV)
+     */
     public function exportExcel()
     {
+        $filename = 'countries_report.csv';
 
-        $countries = Country::all();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ];
 
-        $suppliers = Supplier::all();
+        $callback = function () {
 
-        $products = Product::all();
+            $file = fopen('php://output', 'w');
 
+            fputcsv($file, [
+                'Country',
+                'Region',
+                'Risk Score',
+                'Risk Level',
+                'Trade Index',
+                'Shipping Status'
+            ]);
 
-        return view(
+            foreach (Country::orderBy('name')->get() as $country) {
 
-            'export.excel',
+                fputcsv($file, [
+                    $country->name,
+                    $country->region,
+                    $country->risk_score,
+                    $country->risk_level,
+                    $country->trade_index,
+                    $country->shipping_status,
+                ]);
 
-            compact(
+            }
 
-                'countries',
-                'suppliers',
-                'products'
+            fclose($file);
+        };
 
-            )
-
-        );
-
+        return response()->stream($callback, 200, $headers);
     }
-
 }

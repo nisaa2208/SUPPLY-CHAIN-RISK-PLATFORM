@@ -113,7 +113,7 @@
                             type="number"
                             name="stock"
                             class="form-control"
-                            min="1"
+                            min="0"
                             value="{{ old('stock', $product->stock) }}"
                             required>
                     </div>
@@ -133,8 +133,8 @@
                                 ⏳ Delayed
                             </option>
 
-                            <option value="Disrupted" {{ old('shipping_status', $product->shipping_status) == 'Disrupted' ? 'selected' : '' }}>
-                                🚨 Disrupted
+                            <option value="Critical" {{ old('shipping_status', $product->shipping_status) == 'Critical' ? 'selected' : '' }}>
+                                🚨 Critical
                             </option>
                         </select>
                     </div>
@@ -149,7 +149,7 @@
                             type="number"
                             name="risk_score"
                             class="form-control"
-                            min="1"
+                            min="0"
                             max="100"
                             value="{{ old('risk_score', $product->risk_score) }}"
                             required>

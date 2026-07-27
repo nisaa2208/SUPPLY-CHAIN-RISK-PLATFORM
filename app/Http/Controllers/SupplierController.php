@@ -2,32 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
 use App\Models\Country;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     /**
-     * Display Supplier List
+     * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Supplier::with('country');
-
-        if ($request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%')
-                  ->orWhere('phone', 'like', '%' . $request->search . '%');
-        }
-
-        $suppliers = $query->latest()->paginate(10);
+        $suppliers = Supplier::with('country')
+            ->latest()
+            ->paginate(10);
 
         return view('suppliers.index', compact('suppliers'));
     }
 
     /**
-     * Show Create Form
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -37,32 +31,21 @@ class SupplierController extends Controller
     }
 
     /**
-     * Store Supplier
+     * Store a newly created resource.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'country_id'     => 'required|exists:countries,id',
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|max:255',
-            'phone'          => 'required|string|max:30',
-            'address'        => 'required|string',
-            'supply_status'  => 'required',
-            'risk_score'     => 'required|numeric|min:0|max:100',
-        ],[
-            'country_id.required' => 'Silakan pilih Country.',
-            'country_id.exists'   => 'Country tidak ditemukan.',
-            'name.required'       => 'Nama Supplier wajib diisi.',
-            'email.required'      => 'Email wajib diisi.',
-            'email.email'         => 'Format Email tidak valid.',
-            'phone.required'      => 'Nomor Telepon wajib diisi.',
-            'address.required'    => 'Alamat wajib diisi.',
-            'supply_status.required' => 'Supply Status wajib dipilih.',
-            'risk_score.required' => 'Risk Score wajib diisi.',
-            'risk_score.numeric'  => 'Risk Score harus berupa angka.',
+            'name'           => 'required|max:255',
+            'email'          => 'nullable|email',
+            'phone'          => 'nullable|max:50',
+            'address'        => 'nullable',
+            'supply_status'  => 'required|in:Active,Inactive',
+            'risk_score'     => 'required|integer|min:0|max:100',
         ]);
 
-        Supplier::create($validated);
+        Supplier::create($request->all());
 
         return redirect()
             ->route('suppliers.index')
@@ -70,46 +53,39 @@ class SupplierController extends Controller
     }
 
     /**
-     * Detail Supplier
+     * Display the specified resource.
      */
     public function show(Supplier $supplier)
     {
-        $supplier->load('country');
-
         return view('suppliers.show', compact('supplier'));
     }
 
     /**
-     * Edit Form
+     * Show the form for editing the specified resource.
      */
     public function edit(Supplier $supplier)
     {
-        $supplier->load('country');
-
         $countries = Country::orderBy('name')->get();
 
-        return view('suppliers.edit', compact(
-            'supplier',
-            'countries'
-        ));
+        return view('suppliers.edit', compact('supplier', 'countries'));
     }
 
     /**
-     * Update Supplier
+     * Update the specified resource.
      */
     public function update(Request $request, Supplier $supplier)
     {
-        $validated = $request->validate([
+        $request->validate([
             'country_id'     => 'required|exists:countries,id',
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|max:255',
-            'phone'          => 'required|string|max:30',
-            'address'        => 'required|string',
-            'supply_status'  => 'required',
-            'risk_score'     => 'required|numeric|min:0|max:100',
+            'name'           => 'required|max:255',
+            'email'          => 'nullable|email',
+            'phone'          => 'nullable|max:50',
+            'address'        => 'nullable',
+            'supply_status'  => 'required|in:Active,Inactive',
+            'risk_score'     => 'required|integer|min:0|max:100',
         ]);
 
-        $supplier->update($validated);
+        $supplier->update($request->all());
 
         return redirect()
             ->route('suppliers.index')
@@ -117,7 +93,7 @@ class SupplierController extends Controller
     }
 
     /**
-     * Delete Supplier
+     * Remove the specified resource.
      */
     public function destroy(Supplier $supplier)
     {

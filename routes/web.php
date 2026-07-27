@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExchangeRateController;
@@ -31,7 +32,7 @@ Route::redirect('/', '/dashboard');
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes
+| Authentication Required
 |--------------------------------------------------------------------------
 */
 
@@ -58,7 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::view('/about', 'about')->name('about');
+    Route::get('/about', [AboutController::class, 'index'])
+        ->name('about');
 
     /*
     |--------------------------------------------------------------------------
@@ -73,21 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Reports
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('reports', ReportController::class);
-
-    Route::get('/export/pdf', [ExportController::class, 'exportPDF'])
-        ->name('export.pdf');
-
-    Route::get('/export/excel', [ExportController::class, 'exportExcel'])
-        ->name('export.excel');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Monitoring
+    | Monitoring & World Map
     |--------------------------------------------------------------------------
     */
 
@@ -105,6 +93,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index'])
         ->name('notifications');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reports
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('reports', ReportController::class);
+
+    Route::get('/export/pdf', [ExportController::class, 'exportPDF'])
+        ->name('export.pdf');
+
+    Route::get('/export/excel', [ExportController::class, 'exportExcel'])
+        ->name('export.excel');
 
     /*
     |--------------------------------------------------------------------------
@@ -126,7 +128,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | External APIs
+    | External API
     |--------------------------------------------------------------------------
     */
 
@@ -167,20 +169,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     */
 
     Route::get('/health', function () {
+
         return response()->json([
-            'status' => 'OK',
-            'app'    => config('app.name'),
-            'time'   => now(),
+            'status'      => 'OK',
+            'application' => config('app.name'),
+            'laravel'     => app()->version(),
+            'php'         => PHP_VERSION,
+            'time'        => now()->toDateTimeString(),
         ]);
+
     })->name('health');
 
     Route::get('/clear-cache', function () {
 
         Artisan::call('optimize:clear');
 
-        return back()->with('success', 'Application cache cleared successfully.');
+        return back()->with(
+            'success',
+            'Application cache cleared successfully.'
+        );
 
     })->name('clear.cache');
+
 });
 
 /*
@@ -199,4 +209,4 @@ Route::fallback(function () {
 |--------------------------------------------------------------------------
 */
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

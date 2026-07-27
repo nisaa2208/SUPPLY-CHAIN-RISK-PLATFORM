@@ -1,182 +1,189 @@
 @extends('adminlte::page')
 
-@section('title', 'World Map')
+@section('title', 'Global Supply Chain Risk Map')
 
 @section('content_header')
-<div class="d-flex justify-content-between align-items-center">
-    <h1 class="mb-0">
-        <i class="fas fa-globe-asia text-primary"></i>
-        Global Supply Chain World Map
-    </h1>
-    <div>
-        <span class="badge badge-success">🟢 Low</span>
-        <span class="badge badge-warning">🟡 Medium</span>
-        <span class="badge badge-danger">🔴 High</span>
-    </div>
-</div>
+
+<h1>
+    <i class="fas fa-globe-americas text-primary"></i>
+    Global Supply Chain Risk Map
+</h1>
+
 @stop
+
+@section('css')
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+
+#map{
+
+height:700px;
+
+border-radius:10px;
+
+}
+
+.legend{
+
+background:white;
+
+padding:12px;
+
+border-radius:8px;
+
+box-shadow:0 0 10px rgba(0,0,0,.2);
+
+line-height:24px;
+
+}
+
+.legend i{
+
+width:18px;
+
+height:18px;
+
+float:left;
+
+margin-right:8px;
+
+opacity:.9;
+
+}
+
+</style>
+
+@stop
+
 
 @section('content')
 
 <div class="row">
 
-    <div class="col-md-3">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>{{ $totalCountry }}</h3>
-                <p>Total Countries</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-globe"></i>
-            </div>
-        </div>
-    </div>
+<div class="col-md-12">
 
-    <div class="col-md-3">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>{{ $lowRisk }}</h3>
-                <p>Low Risk</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-        </div>
-    </div>
+<div class="card card-primary">
 
-    <div class="col-md-3">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{ $mediumRisk }}</h3>
-                <p>Medium Risk</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-exclamation-circle"></i>
-            </div>
-        </div>
-    </div>
+<div class="card-header">
 
-    <div class="col-md-3">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>{{ $highRisk }}</h3>
-                <p>High Risk</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-radiation"></i>
-            </div>
-        </div>
-    </div>
+<h3 class="card-title">
+
+World Supply Chain Monitoring
+
+</h3>
 
 </div>
 
-<div class="card shadow-sm">
+<div class="card-body">
 
-    <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0">
-            <i class="fas fa-map-marked-alt"></i>
-            Interactive World Map
-        </h3>
-        <small class="text-white-50">Click a marker for details</small>
-    </div>
+<div id="map"></div>
 
-    <div class="card-body p-0">
+</div>
 
-        <div id="loading" class="text-center py-3">
-            <i class="fas fa-spinner fa-spin"></i>
-            Loading map...
-        </div>
+</div>
 
-        <div id="map" style="height:700px;width:100%;"></div>
-
-    </div>
+</div>
 
 </div>
 
 @stop
 
-@section('css')
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<style>
-    #map { border-radius: 0 0 .25rem .25rem; }
-</style>
-@stop
 
 @section('js')
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const loadingEl = document.getElementById('loading');
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
 
-    const map = L.map('map').setView([20, 0], 2);
+var map=L.map('map').setView([20,0],2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 18,
-    }).addTo(map);
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:18,
+attribution:'© OpenStreetMap'
+}
+).addTo(map);
 
-    const markerLayer = L.layerGroup().addTo(map);
+fetch("{{ route('api.world.map') }}")
 
-    function getColor(riskLevel) {
-        if (riskLevel === 'High') return 'red';
-        if (riskLevel === 'Medium') return 'orange';
-        return 'green';
-    }
+.then(response=>response.json())
 
-    function loadMap() {
-        if (loadingEl) {
-            loadingEl.style.display = 'block';
-            loadingEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading map...';
-        }
+.then(function(countries){
 
-        fetch("{{ route('api.world.map') }}")
-            .then(response => response.json())
-            .then(data => {
-                markerLayer.clearLayers();
+countries.forEach(function(country){
 
-                data.forEach(country => {
-                    if (country.latitude && country.longitude) {
-                        const color = getColor(country.risk_level);
+let color='green';
 
-                        const popupHtml = `
-                            <div style="min-width:220px">
-                                <h5 class="mb-2">🌍 ${country.name ?? '-'}</h5>
-                                <hr class="my-2">
-                                <div><b>🏛 Capital:</b> ${country.capital ?? '-'}</div>
-                                <div><b>🌏 Region:</b> ${country.region ?? '-'}</div>
-                                <div><b>⚠ Risk Level:</b> ${country.risk_level ?? '-'}</div>
-                                <div><b>📊 Risk Score:</b> ${country.risk_score ?? '-'}</div>
-                                <div><b>📈 Trade Index:</b> ${country.trade_index ?? '-'}</div>
-                                <div><b>🚢 Shipping:</b> ${country.shipping_status ?? '-'}</div>
-                            </div>
-                        `;
+if(country.risk_score>=80){
 
-                        L.circleMarker([country.latitude, country.longitude], {
-                            radius: 9,
-                            color: color,
-                            fillColor: color,
-                            fillOpacity: 0.9,
-                            weight: 2,
-                        })
-                        .bindPopup(popupHtml)
-                        .addTo(markerLayer);
-                    }
-                });
+color='red';
 
-                if (loadingEl) loadingEl.style.display = 'none';
-            })
-            .catch(error => {
-                console.log(error);
-                if (loadingEl) {
-                    loadingEl.innerHTML = '<span class="text-danger">Failed to load map data.</span>';
-                }
-            });
-    }
+}
+else if(country.risk_score>=50){
 
-    loadMap();
-    setInterval(loadMap, 30000);
+color='orange';
+
+}
+
+L.circleMarker(
+[
+country.latitude,
+country.longitude
+],
+{
+radius:8,
+color:color,
+fillColor:color,
+fillOpacity:.8,
+weight:2
+})
+.addTo(map)
+.bindPopup(
+
+"<b>"+country.name+"</b><hr>"+
+
+"<b>Region :</b> "+country.region+"<br>"+
+
+"<b>Risk Score :</b> "+country.risk_score+"<br>"+
+
+"<b>Risk Level :</b> "+country.risk_level+"<br>"+
+
+"<b>Trade Index :</b> "+country.trade_index+"<br>"+
+
+"<b>Shipping :</b> "+country.shipping_status
+
+);
+
 });
+
+});
+
+var legend=L.control({position:'bottomright'});
+
+legend.onAdd=function(){
+
+var div=L.DomUtil.create('div','legend');
+
+div.innerHTML=
+
+'<b>Risk Level</b><br><br>'+
+
+'<i style="background:red"></i> High Risk<br>'+
+
+'<i style="background:orange"></i> Medium Risk<br>'+
+
+'<i style="background:green"></i> Low Risk';
+
+return div;
+
+};
+
+legend.addTo(map);
+
 </script>
+
 @stop

@@ -7,377 +7,136 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-
-    //=================================================
-    // COUNTRIES MANAGEMENT
-    //=================================================
-
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        $query = Country::query();
+        $countries = Country::latest()->paginate(10);
 
-
-        // SEARCH COUNTRY
-
-        if ($request->search) {
-
-            $query->where(
-                'name',
-                'LIKE',
-                '%' . $request->search . '%'
-            );
-
-        }
-
-
-        // FILTER RISK LEVEL
-
-        if ($request->risk_level) {
-
-            $query->where(
-                'risk_level',
-                $request->risk_level
-            );
-
-        }
-
-
-        // FILTER REGION
-
-        if ($request->region) {
-
-            $query->where(
-                'region',
-                $request->region
-            );
-
-        }
-
-
-
-        // DATA COUNTRY
-
-        $countries = $query->orderBy(
-            'name',
-            'ASC'
-        )->get();
-
-
-
-        // FILTER REGION
-
-        $regions = Country::select('region')
-            ->distinct()
-            ->orderBy('region')
-            ->pluck('region');
-
-
-
-        // STATISTICS
-
-        $totalCountry = Country::count();
-
-        $lowRisk = Country::where(
-            'risk_level',
-            'Low'
-        )->count();
-
-
-        $mediumRisk = Country::where(
-            'risk_level',
-            'Medium'
-        )->count();
-
-
-        $highRisk = Country::where(
-            'risk_level',
-            'High'
-        )->count();
-
-
-
-        return view(
-
-            'countries.index',
-
-            compact(
-
-                'countries',
-                'regions',
-                'totalCountry',
-                'lowRisk',
-                'mediumRisk',
-                'highRisk'
-
-            )
-
-        );
+        return view('countries.index', compact('countries'));
     }
 
-
-
-
-    //=================================================
-    // DETAIL COUNTRY
-    //=================================================
-
-    public function show(Country $country)
-    {
-
-        $country->load(
-            'suppliers',
-            'products'
-        );
-
-
-        return view(
-
-            'countries.show',
-
-            compact('country')
-
-        );
-
-    }
-
-
-
-
-    //=================================================
-    // WORLD MAP
-    //=================================================
-
-    public function map()
-    {
-
-        $countries = Country::orderBy(
-            'name',
-            'ASC'
-        )->get();
-
-
-        $totalCountry = Country::count();
-
-
-        $lowRisk = Country::where(
-            'risk_level',
-            'Low'
-        )->count();
-
-
-        $mediumRisk = Country::where(
-            'risk_level',
-            'Medium'
-        )->count();
-
-
-        $highRisk = Country::where(
-            'risk_level',
-            'High'
-        )->count();
-
-
-
-        return view(
-
-            'countries.map',
-
-            compact(
-
-                'countries',
-                'totalCountry',
-                'lowRisk',
-                'mediumRisk',
-                'highRisk'
-
-            )
-
-        );
-
-    }
-
-
-//=================================================
-// WORLD MAP API (REAL TIME)
-//=================================================
-
-public function mapData()
-{
-    $countries = Country::select(
-        'id',
-        'name',
-        'code',
-        'capital',
-        'region',
-        'latitude',
-        'longitude',
-        'risk_level',
-        'risk_score',
-        'trade_index',
-        'shipping_status'
-    )
-    ->orderBy('name', 'ASC')
-    ->get();
-
-    return response()->json($countries);
-}
-
-    //=================================================
-    // FORM ADD COUNTRY
-    //=================================================
-
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-
-        return view(
-            'countries.create'
-        );
-
+        return view('countries.create');
     }
 
-
-
-
-    //=================================================
-    // SAVE COUNTRY
-    //=================================================
-
+    /**
+     * Store a newly created resource.
+     */
     public function store(Request $request)
     {
-
         $validated = $request->validate([
-
-            'name'          => 'required',
-            'code'          => 'required|size:2|unique:countries',
-            'iso3'          => 'nullable|size:3',
-            'gdp'           => 'nullable|numeric',
-            'latitude'      => 'nullable|numeric',
-            'longitude'     => 'nullable|numeric',
-            'capital'       => 'required',
-            'region'        => 'required',
-            'currency'      => 'required',
-            'population'    => 'required|numeric',
-            'risk_level'    => 'required',
-            'risk_score'    => 'nullable|numeric',
-            'trade_index'   => 'nullable|numeric',
-            'supply_status' => 'nullable',
-            'shipping_status' => 'nullable',
-
+            'name'             => 'required|string|max:255',
+            'code'             => 'nullable|string|max:10',
+            'region'           => 'required|string|max:255',
+            'risk_score'       => 'required|numeric|min:0|max:100',
+            'risk_level'       => 'required|string|max:50',
+            'trade_index'      => 'required|numeric|min:0|max:100',
+            'shipping_status'  => 'required|string|max:50',
+            'supply_status'    => 'nullable|string|max:50',
+            'latitude'         => 'nullable|numeric',
+            'longitude'        => 'nullable|numeric',
         ]);
-
 
         Country::create($validated);
 
-
         return redirect()
-
             ->route('countries.index')
-
-            ->with(
-
-                'success',
-
-                'Data Negara berhasil ditambahkan.'
-
-            );
-
+            ->with('success', 'Country berhasil ditambahkan.');
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(Country $country)
+    {
+        return view('countries.show', compact('country'));
+    }
 
-
-
-    //=================================================
-    // FORM EDIT COUNTRY
-    //=================================================
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Country $country)
     {
-
-        return view(
-
-            'countries.edit',
-
-            compact('country')
-
-        );
-
+        return view('countries.edit', compact('country'));
     }
 
-
-
-
-    //=================================================
-    // UPDATE COUNTRY
-    //=================================================
-
-    public function update(
-        Request $request,
-        Country $country
-    )
+    /**
+     * Update the specified resource.
+     */
+    public function update(Request $request, Country $country)
     {
-
         $validated = $request->validate([
-
-            'name'          => 'required',
-
-            'code'          =>
-            'required|unique:countries,code,' . $country->id,
-
-            'capital'       => 'required',
-
-            'region'        => 'required',
-
-            'currency'      => 'required',
-
-            'population'    => 'required|numeric',
-
-            'risk_level'    => 'required',
-
-            'risk_score'    => 'nullable|numeric',
-
-            'trade_index'   => 'nullable|numeric',
-
-            'supply_status' => 'nullable',
-
-            'shipping_status' => 'nullable',
-
+            'name'             => 'required|string|max:255',
+            'code'             => 'nullable|string|max:10',
+            'region'           => 'required|string|max:255',
+            'risk_score'       => 'required|numeric|min:0|max:100',
+            'risk_level'       => 'required|string|max:50',
+            'trade_index'      => 'required|numeric|min:0|max:100',
+            'shipping_status'  => 'required|string|max:50',
+            'supply_status'    => 'nullable|string|max:50',
+            'latitude'         => 'nullable|numeric',
+            'longitude'        => 'nullable|numeric',
         ]);
 
-
-      $country->update($validated);
-
-return redirect()
-    ->route('countries.index')
-    ->with(
-        'success',
-        'Data Negara berhasil diperbarui.'
-    );
-}
-
-    //=================================================
-    // DELETE COUNTRY
-    //=================================================
-
-    public function destroy(
-        Country $country
-    )
-    {
-
-        $country->delete();
-
+        $country->update($validated);
 
         return redirect()
-
             ->route('countries.index')
-
-            ->with(
-
-                'success',
-
-                'Data Negara berhasil dihapus.'
-
-            );
-
+            ->with('success', 'Country berhasil diperbarui.');
     }
 
+    /**
+     * Remove the specified resource.
+     */
+    public function destroy(Country $country)
+    {
+        $country->delete();
+
+        return redirect()
+            ->route('countries.index')
+            ->with('success', 'Country berhasil dihapus.');
+    }
+
+    /**
+     * Display World Map.
+     */
+    public function map()
+    {
+        $countries = Country::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get();
+
+        return view('countries.map', compact('countries'));
+    }
+
+    /**
+     * Return World Map data (JSON).
+     */
+    public function mapData()
+    {
+        $countries = Country::select(
+                'id',
+                'name',
+                'code',
+                'region',
+                'latitude',
+                'longitude',
+                'risk_score',
+                'risk_level',
+                'trade_index',
+                'shipping_status',
+                'supply_status'
+            )
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get();
+
+        return response()->json($countries);
+    }
 }

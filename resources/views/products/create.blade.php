@@ -5,8 +5,8 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
     <h1>
-        <i class="fas fa-box-open text-success"></i>
-        Add New Product
+        <i class="fas fa-plus-circle text-primary"></i>
+        Add Product
     </h1>
 
     <a href="{{ route('products.index') }}" class="btn btn-secondary">
@@ -33,7 +33,8 @@
 </div>
 @endif
 
-<div class="card card-success shadow">
+<div class="card card-primary shadow">
+
     <div class="card-header">
         <h3 class="card-title">
             <i class="fas fa-box"></i>
@@ -42,146 +43,210 @@
     </div>
 
     <form action="{{ route('products.store') }}" method="POST">
+
         @csrf
 
         <div class="card-body">
 
             <div class="row">
+
                 <div class="col-md-6">
+
                     <div class="form-group">
                         <label>Country</label>
+
                         <select name="country_id" class="form-control" required>
+
                             <option value="">-- Select Country --</option>
+
                             @foreach($countries as $country)
-                                <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
+
+                                <option value="{{ $country->id }}"
+                                    {{ old('country_id') == $country->id ? 'selected' : '' }}>
+
                                     {{ $country->name }}
+
                                 </option>
+
                             @endforeach
+
                         </select>
+
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <div class="form-group">
+
                         <label>Supplier</label>
+
                         <select name="supplier_id" class="form-control" required>
+
                             <option value="">-- Select Supplier --</option>
+
                             @foreach($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+
+                                <option value="{{ $supplier->id }}"
+                                    {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+
                                     {{ $supplier->name }}
+
                                 </option>
+
                             @endforeach
+
                         </select>
+
                     </div>
+
                 </div>
+
             </div>
 
             <div class="row">
+
                 <div class="col-md-6">
+
                     <div class="form-group">
+
                         <label>Product Name</label>
+
                         <input
                             type="text"
                             name="name"
                             class="form-control"
                             value="{{ old('name') }}"
-                            placeholder="Enter Product Name"
                             required>
+
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <div class="form-group">
+
                         <label>Category</label>
+
                         <input
                             type="text"
                             name="category"
                             class="form-control"
                             value="{{ old('category') }}"
-                            placeholder="Example: Electronic"
                             required>
+
                     </div>
+
                 </div>
+
             </div>
 
             <div class="row">
-                <div class="col-md-6">
+
+                <div class="col-md-4">
+
                     <div class="form-group">
+
                         <label>Stock</label>
+
                         <input
                             type="number"
                             name="stock"
                             class="form-control"
-                            min="1"
-                            value="{{ old('stock') }}"
-                            placeholder="Example: 500"
+                            min="0"
+                            value="{{ old('stock',0) }}"
                             required>
+
                     </div>
+
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Shipping Status</label>
-                        <select name="shipping_status" class="form-control" required>
-                            <option value="">-- Select Shipping Status --</option>
+                <div class="col-md-4">
 
-                            <option value="Normal" {{ old('shipping_status') == 'Normal' ? 'selected' : '' }}>
+                    <div class="form-group">
+
+                        <label>Shipping Status</label>
+
+                        <select name="shipping_status"
+                                class="form-control"
+                                required>
+
+                            <option value="Normal"
+                                {{ old('shipping_status')=='Normal'?'selected':'' }}>
                                 🚚 Normal
                             </option>
 
-                            <option value="Delayed" {{ old('shipping_status') == 'Delayed' ? 'selected' : '' }}>
+                            <option value="Delayed"
+                                {{ old('shipping_status')=='Delayed'?'selected':'' }}>
                                 ⏳ Delayed
                             </option>
 
-                            <option value="Disrupted" {{ old('shipping_status') == 'Disrupted' ? 'selected' : '' }}>
-                                🚨 Disrupted
+                            <option value="Critical"
+                                {{ old('shipping_status')=='Critical'?'selected':'' }}>
+                                🚨 Critical
                             </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-6">
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
                     <div class="form-group">
-                        <label>Risk Score (1 - 100)</label>
+
+                        <label>Risk Score</label>
+
                         <input
                             type="number"
                             name="risk_score"
                             class="form-control"
-                            min="1"
+                            min="0"
                             max="100"
-                            value="{{ old('risk_score') }}"
-                            placeholder="Example: 85"
+                            value="{{ old('risk_score',0) }}"
                             required>
 
-                        <small class="text-muted">
-                            Higher score indicates higher supply chain risk.
-                        </small>
                     </div>
+
                 </div>
+
             </div>
 
         </div>
 
         <div class="card-footer text-right">
+
             <button type="submit" class="btn btn-success">
+
                 <i class="fas fa-save"></i>
+
                 Save Product
+
             </button>
 
             <button type="reset" class="btn btn-secondary">
+
                 <i class="fas fa-redo"></i>
+
                 Reset
+
             </button>
 
             <a href="{{ route('products.index') }}" class="btn btn-danger">
+
                 <i class="fas fa-times"></i>
+
                 Cancel
+
             </a>
+
         </div>
 
     </form>
+
 </div>
 
 @stop

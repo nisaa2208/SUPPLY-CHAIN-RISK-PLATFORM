@@ -6,44 +6,38 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
-    public function up()
+    public function up(): void
     {
-
         Schema::create('suppliers', function (Blueprint $table) {
 
             $table->id();
 
             $table->foreignId('country_id')
-                    ->constrained()
-                    ->onDelete('cascade');
-
+                ->constrained('countries')
+                ->cascadeOnDelete();
 
             $table->string('name');
 
-            $table->string('email');
+            $table->string('email')->nullable();
 
-            $table->string('phone');
+            $table->string('phone')->nullable();
 
-            $table->text('address');
+            $table->text('address')->nullable();
 
-            $table->string('supply_status');
+            $table->enum('supply_status', [
+                'Active',
+                'Inactive'
+            ])->default('Active');
 
-            $table->integer('risk_score');
+            $table->integer('risk_score')->default(0);
 
             $table->timestamps();
 
         });
-
     }
 
-
-
-    public function down()
+    public function down(): void
     {
-
         Schema::dropIfExists('suppliers');
-
     }
-
 };
