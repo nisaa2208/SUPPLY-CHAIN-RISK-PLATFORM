@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-star text-warning mr-2"></i>
             Daftar Favorit & Watchlist
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Negara & Entitas Pasokan yang Anda Tandai untuk Pemantauan Khusus
-        </div>
     </div>
 </div>
 @stop

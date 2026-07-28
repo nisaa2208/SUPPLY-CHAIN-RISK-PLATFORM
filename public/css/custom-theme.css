@@ -12,26 +12,27 @@
     --bg-sidebar: #0f172a;
     --color-text-main: #1e293b;
     --color-text-muted: #64748b;
-    
+
     --primary-indigo: #6366f1;
     --primary-dark: #4f46e5;
     --accent-blue: #3b82f6;
     --accent-emerald: #10b981;
     --accent-amber: #f59e0b;
     --accent-rose: #ef4444;
-    
+
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
     --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.08);
     --shadow-hover: 0 16px 32px -4px rgba(99, 102, 241, 0.12);
-    
+
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 18px;
     --radius-pill: 50px;
 }
 
-body, .wrapper {
+body,
+.wrapper {
     font-family: var(--font-primary) !important;
     background-color: var(--bg-body) !important;
     color: var(--color-text-main);
@@ -42,7 +43,8 @@ body, .wrapper {
    SIDEBAR & BRANDING
    ========================================================================== */
 
-.main-sidebar, .sidebar-dark-primary {
+.main-sidebar,
+.sidebar-dark-primary {
     background: #0f172a !important;
     border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15) !important;
@@ -220,35 +222,39 @@ body, .wrapper {
 }
 
 /* Card Header Colors Custom */
-.card-primary:not(.card-outline) > .card-header {
+.card-primary:not(.card-outline)>.card-header {
     background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
     color: #ffffff !important;
 }
-.card-primary:not(.card-outline) > .card-header .card-title {
+
+.card-primary:not(.card-outline)>.card-header .card-title {
     color: #ffffff !important;
 }
 
-.card-success:not(.card-outline) > .card-header {
+.card-success:not(.card-outline)>.card-header {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
     color: #ffffff !important;
 }
-.card-success:not(.card-outline) > .card-header .card-title {
+
+.card-success:not(.card-outline)>.card-header .card-title {
     color: #ffffff !important;
 }
 
-.card-danger:not(.card-outline) > .card-header {
+.card-danger:not(.card-outline)>.card-header {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
     color: #ffffff !important;
 }
-.card-danger:not(.card-outline) > .card-header .card-title {
+
+.card-danger:not(.card-outline)>.card-header .card-title {
     color: #ffffff !important;
 }
 
-.card-warning:not(.card-outline) > .card-header {
+.card-warning:not(.card-outline)>.card-header {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
     color: #ffffff !important;
 }
-.card-warning:not(.card-outline) > .card-header .card-title {
+
+.card-warning:not(.card-outline)>.card-header .card-title {
     color: #ffffff !important;
 }
 
@@ -304,12 +310,12 @@ body, .wrapper {
     transition: all 0.3s ease !important;
 }
 
-.small-box .icon > i {
+.small-box .icon>i {
     font-size: 3.8rem !important;
     opacity: 0.22 !important;
 }
 
-.small-box:hover .icon > i {
+.small-box:hover .icon>i {
     transform: scale(1.12) rotate(-5deg) !important;
     opacity: 0.32 !important;
 }
@@ -318,13 +324,16 @@ body, .wrapper {
 .small-box.bg-info {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
 }
+
 .small-box.bg-success {
     background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
 }
+
 .small-box.bg-warning {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
     color: #ffffff !important;
 }
+
 .small-box.bg-danger {
     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
 }
@@ -403,12 +412,15 @@ body, .wrapper {
     gap: 0.35rem;
 }
 
-.badge-danger, .badge-high {
+.badge-danger,
+.badge-high {
     background-color: rgba(239, 68, 68, 0.12) !important;
     color: #dc2626 !important;
     border: 1px solid rgba(239, 68, 68, 0.2);
 }
-.badge-danger::before, .badge-high::before {
+
+.badge-danger::before,
+.badge-high::before {
     content: '';
     width: 6px;
     height: 6px;
@@ -417,12 +429,15 @@ body, .wrapper {
     display: inline-block;
 }
 
-.badge-warning, .badge-medium {
+.badge-warning,
+.badge-medium {
     background-color: rgba(245, 158, 11, 0.12) !important;
     color: #d97706 !important;
     border: 1px solid rgba(245, 158, 11, 0.2);
 }
-.badge-warning::before, .badge-medium::before {
+
+.badge-warning::before,
+.badge-medium::before {
     content: '';
     width: 6px;
     height: 6px;
@@ -431,12 +446,15 @@ body, .wrapper {
     display: inline-block;
 }
 
-.badge-success, .badge-low {
+.badge-success,
+.badge-low {
     background-color: rgba(16, 185, 129, 0.12) !important;
     color: #059669 !important;
     border: 1px solid rgba(16, 185, 129, 0.2);
 }
-.badge-success::before, .badge-low::before {
+
+.badge-success::before,
+.badge-low::before {
     content: '';
     width: 6px;
     height: 6px;
@@ -445,7 +463,8 @@ body, .wrapper {
     display: inline-block;
 }
 
-.badge-primary, .badge-info {
+.badge-primary,
+.badge-info {
     background-color: rgba(99, 102, 241, 0.12) !important;
     color: #4f46e5 !important;
     border: 1px solid rgba(99, 102, 241, 0.2);
@@ -515,7 +534,7 @@ body, .wrapper {
    FORMS & INPUTS
    ========================================================================== */
 
-.form-control, .custom-select {
+.form-control {
     border: 1px solid #cbd5e1 !important;
     border-radius: var(--radius-md) !important;
     padding: 0.6rem 0.9rem !important;
@@ -525,7 +544,18 @@ body, .wrapper {
     background-color: #ffffff !important;
 }
 
-.form-control:focus, .custom-select:focus {
+.custom-select {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.6rem 2.2rem 0.6rem 0.9rem !important;
+    font-size: 0.9rem !important;
+    color: var(--color-text-main) !important;
+    transition: all 0.2s ease !important;
+    background-color: #ffffff !important;
+}
+
+.form-control:focus,
+.custom-select:focus {
     border-color: #6366f1 !important;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
     outline: none !important;
@@ -542,7 +572,8 @@ label {
    LEAFLET MAP & CUSTOM OVERLAYS
    ========================================================================== */
 
-#map, .leaflet-container {
+#map,
+.leaflet-container {
     border-radius: var(--radius-lg) !important;
     box-shadow: var(--shadow-md) !important;
     border: 1px solid #e2e8f0 !important;
@@ -577,10 +608,12 @@ label {
         transform: scale(0.95);
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
     }
+
     70% {
         transform: scale(1);
         box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
     }
+
     100% {
         transform: scale(0.95);
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
@@ -591,23 +624,28 @@ label {
    AUTH PAGES (LOGIN & REGISTER)
    ========================================================================== */
 
-.login-page, .register-page {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%) !important;
+.login-page,
+.register-page {
+    background: linear-gradient(135deg, #0b0f19 0%, #0f172a 50%, #1e1b4b 100%) !important;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: var(--font-primary) !important;
 }
 
-.login-box, .register-box {
+.login-box,
+.register-box {
     width: 440px !important;
 }
 
-.login-logo, .register-logo {
+.login-logo,
+.register-logo {
     margin-bottom: 1.5rem !important;
 }
 
-.login-logo a, .register-logo a {
+.login-logo a,
+.register-logo a {
     color: #ffffff !important;
     font-size: 1.6rem !important;
     font-weight: 800 !important;
@@ -616,17 +654,46 @@ label {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.login-box .card, .register-box .card {
+.login-box .card,
+.register-box .card {
     border-radius: var(--radius-lg) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    background: #ffffff !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
     overflow: hidden;
 }
 
-.login-card-body, .register-card-body {
+.login-card-body,
+.register-card-body {
     padding: 2.25rem !important;
+}
+
+/* Glassmorphism & Micro-animations */
+@keyframes float-glow {
+
+    0%,
+    100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.05);
+        opacity: 0.7;
+    }
+}
+
+.glow-animation {
+    animation: float-glow 6s ease-in-out infinite;
+}
+
+.glass-card {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }

@@ -388,6 +388,39 @@ return [
         'route' => 'favorites.index',
         'icon' => 'fas fa-star text-warning',
     ],
+    [
+        'text' => 'Artikel Analisis',
+        'route' => 'articles.index',
+        'icon' => 'fas fa-book-open text-info',
+    ],
+    [
+        'header' => 'ADMIN DASHBOARD & KELOLA (PDF HAL 6)',
+        'can' => 'admin-only',
+    ],
+    [
+        'text' => 'Admin Panel Dashboard',
+        'route' => 'admin.dashboard',
+        'icon' => 'fas fa-user-shield text-danger',
+        'can' => 'admin-only',
+    ],
+    [
+        'text' => 'Kelola User',
+        'route' => 'users.index',
+        'icon' => 'fas fa-users-cog text-warning',
+        'can' => 'admin-only',
+    ],
+    [
+        'text' => 'Tambah Pelabuhan Baru',
+        'route' => 'ports.create',
+        'icon' => 'fas fa-plus-circle text-success',
+        'can' => 'admin-only',
+    ],
+    [
+        'text' => 'Fitur AI / Sentiment Engine',
+        'route' => 'admin.ai.sentiment',
+        'icon' => 'fas fa-brain text-purple',
+        'can' => 'admin-only',
+    ],
 ],
     /*
     |--------------------------------------------------------------------------

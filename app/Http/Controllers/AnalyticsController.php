@@ -30,6 +30,18 @@ class AnalyticsController extends Controller
                            ->take(10)
                            ->get();
 
+        $allCountries = Country::orderBy('name')->get();
+        $selectedCountry = $allCountries->first();
+
+        $lowRiskCount = $lowRisk;
+        $mediumRiskCount = $mediumRisk;
+        $highRiskCount = $highRisk;
+        $topRiskCountries = $topCountries;
+
+        $regionalRisks = Country::select('region', \DB::raw('AVG(risk_score) as avg_score'))
+            ->groupBy('region')
+            ->pluck('avg_score', 'region');
+
         return view('analytics', compact(
             'countryCount',
             'supplierCount',
@@ -39,7 +51,14 @@ class AnalyticsController extends Controller
             'lowRisk',
             'topCountries',
             'topSuppliers',
-            'products'
+            'products',
+            'allCountries',
+            'selectedCountry',
+            'lowRiskCount',
+            'mediumRiskCount',
+            'highRiskCount',
+            'topRiskCountries',
+            'regionalRisks'
         ));
     }
 }

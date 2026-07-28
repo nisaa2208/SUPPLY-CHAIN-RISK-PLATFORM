@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-globe-americas text-primary mr-2"></i>
             Informasi 195 Negara Dunia Real-Time
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Direktori Lengkap Profil Risiko, Indikator Ekonomi & Live Sync REST Countries API
-        </div>
     </div>
 
     <div class="d-flex gap-2">
@@ -208,8 +205,9 @@
                         <td class="text-center font-weight-bold text-muted">{{ $loop->iteration }}</td>
 
                         <td>
-                            <a href="{{ route('countries.show', $country->id) }}" class="font-weight-bold text-dark hover-primary style-none">
-                                <i class="fas fa-flag text-primary mr-2"></i>{{ $country->name }}
+                            <a href="{{ route('countries.show', $country->id) }}" class="font-weight-bold text-dark hover-primary style-none d-inline-flex align-items-center">
+                                <img src="https://flagcdn.com/w40/{{ strtolower($country->code) }}.png" class="rounded mr-2 shadow-2xs" style="width:24px; height:16px; object-fit:cover;" alt="{{ $country->code }}" onerror="this.style.display='none'">
+                                <span>{{ $country->name }}</span>
                             </a>
                         </td>
 

@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.8rem; color: #0f172a; letter-spacing: -0.02em;">
             <i class="fas fa-shield-alt text-primary mr-2"></i>
-            Analisis Risiko Rantai Pasok Global (Weighted Scoring Engine)
+            Analisis Risiko Rantai Pasok Global
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Simulasi Weighted Risk Score Algorithm (PDF Hal 4 & 8), Breakdowns Indikator Multi-Faktor & Matriks Risiko Negara
-        </div>
     </div>
 
     <div class="d-flex align-items-center gap-2">

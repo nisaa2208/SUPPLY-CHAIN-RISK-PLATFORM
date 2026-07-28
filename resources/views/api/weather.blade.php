@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-cloud-sun text-warning mr-2"></i>
             Monitoring Cuaca Real-Time Global
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Live Weather Conditions, Satellite Wind Speed & Supply Chain Climate Risk Index (Open-Meteo API)
-        </div>
     </div>
 
     <div class="d-flex align-items-center gap-2">
@@ -58,52 +55,64 @@
     <i class="fas fa-exclamation-triangle mr-2"></i> <span id="weatherErrorMessage">Gagal mengambil data cuaca terbaru dari Open-Meteo API.</span>
 </div>
 
-<!-- Summary Metrics Cards Row -->
-<div class="row">
-    <div class="col-md-3">
-        <div class="small-box bg-info shadow-sm">
-            <div class="inner">
-                <h3 id="statTotalCountries">{{ $countries->count() }}</h3>
-                <p>Negara Dipantau</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-globe-americas"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="small-box bg-success shadow-sm">
-            <div class="inner">
-                <h3 id="statAvgTemp">-- °C</h3>
-                <p>Rata-Rata Suhu Global</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-temperature-high"></i>
+<!-- Summary Metrics Cards Row (Compact & Sleek Layout) -->
+<div class="row mb-3">
+    <!-- Total Countries -->
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: var(--radius-md); background: #ffffff; border-left: 4px solid #3b82f6 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted font-weight-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Negara Dipantau</div>
+                    <div class="h3 font-weight-bold text-dark mb-0 mt-1" id="statTotalCountries">{{ $countries->count() }}</div>
+                </div>
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: #eff6ff; color: #3b82f6; font-size: 1rem;">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="small-box bg-danger shadow-sm">
-            <div class="inner">
-                <h3 id="statHighRisk">--</h3>
-                <p>Peringatan Badai / Risikio Tinggi</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-bolt"></i>
+    <!-- Avg Temperature -->
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: var(--radius-md); background: #ffffff; border-left: 4px solid #10b981 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted font-weight-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Rata-Rata Suhu Global</div>
+                    <div class="h3 font-weight-bold text-dark mb-0 mt-1" id="statAvgTemp">-- °C</div>
+                </div>
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: #ecfdf5; color: #10b981; font-size: 1rem;">
+                    <i class="fas fa-temperature-high"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="small-box bg-warning shadow-sm">
-            <div class="inner">
-                <h3 id="statMaxWind">-- km/h</h3>
-                <p>Kecepatan Angin Maksimum</p>
+    <!-- Storm Risk -->
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: var(--radius-md); background: #ffffff; border-left: 4px solid #ef4444 !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted font-weight-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Peringatan Badai / Risikio Tinggi</div>
+                    <div class="h3 font-weight-bold text-dark mb-0 mt-1" id="statHighRisk">--</div>
+                </div>
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: #fef2f2; color: #ef4444; font-size: 1rem;">
+                    <i class="fas fa-bolt"></i>
+                </div>
             </div>
-            <div class="icon">
-                <i class="fas fa-wind"></i>
+        </div>
+    </div>
+
+    <!-- Wind Speed -->
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: var(--radius-md); background: #ffffff; border-left: 4px solid #f59e0b !important;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted font-weight-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Kecepatan Angin Maksimum</div>
+                    <div class="h3 font-weight-bold text-dark mb-0 mt-1" id="statMaxWind">-- km/h</div>
+                </div>
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: #fffbeb; color: #f59e0b; font-size: 1rem;">
+                    <i class="fas fa-wind"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -608,9 +617,14 @@ document.addEventListener("DOMContentLoaded", function () {
         renderAllCountriesGrid(allWeatherData);
     });
 
-    // Initial Load
+    // Initial Load & Real-Time Auto Polling Every 10s
     fetchAllCountriesWeather();
     if (selectedCountryId) fetchSingleCountryWeather(selectedCountryId);
+
+    setInterval(function () {
+        fetchAllCountriesWeather();
+        if (selectedCountryId) fetchSingleCountryWeather(selectedCountryId);
+    }, 10000);
 });
 </script>
 @stop

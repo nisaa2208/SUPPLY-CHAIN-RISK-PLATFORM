@@ -58,6 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('countries.sync.live');
 
     Route::resource('countries', CountryController::class);
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('products', ProductController::class);
 
     /*
     |--------------------------------------------------------------------------
@@ -126,27 +128,45 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Secondary Resources & Management
+    | Reports
     |--------------------------------------------------------------------------
     */
-    Route::resource('suppliers', SupplierController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('reports', ReportController::class);
-    Route::get('/export/pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');
-    Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
-    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
-    Route::get('/global-alert', [GlobalAlertController::class, 'index'])->name('global.alert');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/about', [AboutController::class, 'index'])->name('about');
+    Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])
+        ->name('reports.index');
 
-    Route::prefix('api')->group(function () {
-        Route::get('/countries', [ApiController::class, 'countries'])->name('api.countries');
-        Route::get('/weather', [WeatherController::class, 'index'])->name('api.weather');
-        Route::get('/exchange-rate', [ExchangeRateController::class, 'index'])->name('api.exchange');
-        Route::get('/world-bank', [WorldBankController::class, 'index'])->name('api.worldbank');
+    Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])
+        ->name('report.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Only Management Routes (PDF Spec Hal 6)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin', [\App\Http\Controllers\AdminDashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        Route::resource('users', UserController::class);
+
+        Route::get('/ports/create', [\App\Http\Controllers\PortController::class, 'create'])->name('ports.create');
+        Route::post('/ports', [\App\Http\Controllers\PortController::class, 'store'])->name('ports.store');
+        Route::get('/ports/{port}/edit', [\App\Http\Controllers\PortController::class, 'edit'])->name('ports.edit');
+        Route::put('/ports/{port}', [\App\Http\Controllers\PortController::class, 'update'])->name('ports.update');
+        Route::delete('/ports/{port}', [\App\Http\Controllers\PortController::class, 'destroy'])->name('ports.destroy');
+
+        Route::get('/articles/create', [\App\Http\Controllers\ArticleController::class, 'create'])->name('articles.create');
+        Route::post('/articles', [\App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
+        Route::get('/articles/{article}/edit', [\App\Http\Controllers\ArticleController::class, 'edit'])->name('articles.edit');
+        Route::put('/articles/{article}', [\App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
+        Route::get('/admin/ai-sentiment', [\App\Http\Controllers\AiSentimentController::class, 'index'])->name('admin.ai.sentiment');
+        Route::post('/admin/ai-sentiment/positive', [\App\Http\Controllers\AiSentimentController::class, 'addPositiveWord'])->name('admin.ai.positive.add');
+        Route::delete('/admin/ai-sentiment/positive/{id}', [\App\Http\Controllers\AiSentimentController::class, 'deletePositiveWord'])->name('admin.ai.positive.delete');
+        Route::post('/admin/ai-sentiment/negative', [\App\Http\Controllers\AiSentimentController::class, 'addNegativeWord'])->name('admin.ai.negative.add');
+        Route::delete('/admin/ai-sentiment/negative/{id}', [\App\Http\Controllers\AiSentimentController::class, 'deleteNegativeWord'])->name('admin.ai.negative.delete');
     });
+
+    Route::get('/articles', [\App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/{article}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('articles.show');
 
     /*
     |--------------------------------------------------------------------------
@@ -208,12 +228,20 @@ Route::get('/api/news', [ApiController::class, 'apiNews'])->name('rest.news');
 Route::get('/api/news/live', [NewsController::class, 'getLiveNews'])->name('news.live');
 Route::get('/api/currency', [ApiController::class, 'apiCurrency'])->name('rest.currency');
 Route::get('/api/currency/live', [ExchangeRateController::class, 'getLiveRates'])->name('exchange.live');
+Route::get('/api/weather/data', [WeatherController::class, 'getWeatherData'])->name('weather.data');
+Route::get('/api/weather/live', [WeatherController::class, 'getWeatherData'])->name('weather.live');
 
 /*
 |--------------------------------------------------------------------------
-| Fallback
+| Quick Logout Endpoint (GET /logout)
 |--------------------------------------------------------------------------
 */
+Route::get('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login')->with('success', 'Anda telah berhasil logout.');
+})->name('logout.get');
 
 Route::fallback(function () {
     return redirect()->route('dashboard');

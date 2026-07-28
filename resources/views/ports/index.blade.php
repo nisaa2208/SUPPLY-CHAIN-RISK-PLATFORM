@@ -5,16 +5,19 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-anchor text-primary mr-2"></i>
             Lokasi Pelabuhan Dunia & Rute Maritim Global (GIS)
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Monitoring Pelabuhan Laut Interaktif, Tingkat Kepadatan, Status Operasional & Jalur Distribusi Logistik
-        </div>
     </div>
 
     <div class="d-flex align-items-center gap-2">
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('ports.create') }}" class="btn btn-success btn-sm shadow-sm font-weight-bold mr-2">
+                <i class="fas fa-plus-circle mr-1"></i> Tambah Pelabuhan Baru (Admin)
+            </a>
+        @endif
+
         <button id="btnRefreshPorts" class="btn btn-primary btn-sm shadow-sm font-weight-bold">
             <i class="fas fa-sync-alt mr-1" id="refreshSpinner"></i> Refresh Data Pelabuhan
         </button>

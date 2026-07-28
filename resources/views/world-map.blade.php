@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-chart-area text-primary mr-2"></i>
             Visualisasi Data Global & Pusat Analisis Statistik
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Monitoring Spasial Interaktif, Distribusi Risiko, Analisis Korelasi & Profil Infrastruktur Logistik
-        </div>
     </div>
 
     <div class="d-flex align-items-center gap-2">

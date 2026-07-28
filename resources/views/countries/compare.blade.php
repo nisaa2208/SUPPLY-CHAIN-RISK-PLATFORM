@@ -5,13 +5,10 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+        <h1 class="font-weight-bold mb-0" style="font-size: 1.75rem;">
             <i class="fas fa-balance-scale text-primary mr-2"></i>
             Perbandingan Negara & AI Supply Chain Intelligence
         </h1>
-        <div class="text-muted" style="font-size: 0.88rem;">
-            Matriks Komparatif Side-by-Side, Integrasi Real-Time Multi-API & AI Risk Insight
-        </div>
     </div>
 
     <div class="d-flex align-items-center gap-2">

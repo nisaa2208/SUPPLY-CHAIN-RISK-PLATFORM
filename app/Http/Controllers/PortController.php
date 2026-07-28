@@ -65,6 +65,90 @@ class PortController extends Controller
     }
 
     /**
+     * Show form for adding new Port to dataset (Admin only).
+     */
+    public function create()
+    {
+        return view('ports.create');
+    }
+
+    /**
+     * Store new Port in dataset (Admin only).
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:150',
+            'port_code' => 'required|string|max:20|unique:ports,port_code',
+            'country' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'risk_level' => 'required|string|in:Low Risk,Medium Risk,High Risk',
+        ]);
+
+        Port::create([
+            'name' => $request->name,
+            'port_code' => strtoupper($request->port_code),
+            'country' => $request->country,
+            'city' => $request->city,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'risk_level' => $request->risk_level,
+            'risk_score' => $request->risk_level === 'High Risk' ? 80 : ($request->risk_level === 'Medium Risk' ? 50 : 20),
+            'status' => 'Active',
+        ]);
+
+        return redirect()->route('ports.index')->with('success', 'Pelabuhan baru berhasil ditambahkan ke dataset.');
+    }
+
+    /**
+     * Show form for editing Port in dataset (Admin only).
+     */
+    public function edit(Port $port)
+    {
+        return view('ports.edit', compact('port'));
+    }
+
+    /**
+     * Update Port in dataset (Admin only).
+     */
+    public function update(Request $request, Port $port)
+    {
+        $request->validate([
+            'name' => 'required|string|max:150',
+            'port_code' => 'required|string|max:20|unique:ports,port_code,' . $port->id,
+            'country' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'risk_level' => 'required|string|in:Low Risk,Medium Risk,High Risk',
+        ]);
+
+        $port->update([
+            'name' => $request->name,
+            'port_code' => strtoupper($request->port_code),
+            'country' => $request->country,
+            'city' => $request->city,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'risk_level' => $request->risk_level,
+            'risk_score' => $request->risk_level === 'High Risk' ? 80 : ($request->risk_level === 'Medium Risk' ? 50 : 20),
+        ]);
+
+        return redirect()->route('ports.index')->with('success', 'Data pelabuhan berhasil diperbarui.');
+    }
+
+    /**
+     * Delete Port from dataset (Admin only).
+     */
+    public function destroy(Port $port)
+    {
+        $port->delete();
+        return redirect()->route('ports.index')->with('success', 'Pelabuhan berhasil dihapus dari dataset.');
+    }
+
+    /**
      * Live AJAX endpoint for real-time GIS Port Data + Shipping Routes JSON
      */
     public function getLivePorts(Request $request)
