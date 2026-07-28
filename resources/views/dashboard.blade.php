@@ -1,727 +1,286 @@
 @extends('adminlte::page')
 
-@section('title', 'Global Supply Chain Risk Dashboard')
+@section('title', 'Global Country Dashboard')
 
 @section('content_header')
-<div class="d-flex justify-content-between align-items-center mb-3">
-
+<div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-        <h1 class="font-weight-bold">
-            <i class="fas fa-globe-asia text-primary"></i>
-            Global Supply Chain Risk Dashboard
+        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+            <i class="fas fa-shield-alt text-primary mr-2"></i>
+            Global Supply Chain Risk Intelligence Dashboard
         </h1>
-        <small class="text-muted">
-            Real-Time Monitoring of Global Supply Chain Risks
-        </small>
+        <div class="text-muted d-flex align-items-center" style="font-size: 0.88rem;">
+            <span class="live-dot mr-2"></span> Multi-API Real-Time Risk Analytics & Decision Support Platform
+        </div>
     </div>
 
-    <div class="text-right">
-
-        <div id="liveClock"
-             style="font-size:15px;font-weight:bold;">
+    <div class="d-flex align-items-center">
+        <div id="liveClock" class="badge badge-primary px-3 py-2 mr-3" style="font-size:0.85rem; font-weight:600; border-radius: 20px;">
         </div>
 
-        <a href="{{ route('dashboard') }}"
-           class="btn btn-success mt-2">
-
-            <i class="fas fa-sync"></i>
-            Refresh
-
+        <a href="{{ route('dashboard') }}" class="btn btn-success btn-sm shadow-sm">
+            <i class="fas fa-sync-alt mr-1"></i> Refresh
         </a>
-
     </div>
-
 </div>
 @stop
 
 @section('content')
 
+<!-- Global Country Selection & Economic Risk Dashboard (PDF Hal 4) -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-gradient-primary text-white py-3">
+        <h3 class="card-title font-weight-bold mb-0">
+            <i class="fas fa-globe-americas mr-2"></i> Global Country Dashboard & Risk Engine
+        </h3>
+    </div>
+    <div class="card-body p-4">
+        <form action="{{ route('dashboard') }}" method="GET" class="mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-9 mb-2 mb-md-0">
+                    <label class="font-weight-bold text-dark mb-1"><i class="fas fa-flag text-primary mr-1"></i> Pilih Negara untuk Dipantau (Contoh: Germany, China, Indonesia, Australia):</label>
+                    <select name="country_id" class="form-control form-control-lg custom-select" onchange="this.form.submit()">
+                        @foreach($allCountries as $c)
+                            <option value="{{ $c->id }}" {{ optional($selectedCountry)->id == $c->id ? 'selected' : '' }}>
+                                {{ $c->name }} ({{ $c->code }}) — {{ $c->region }} [Risk Score: {{ $c->risk_score }}%]
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="d-none d-md-block">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary btn-block shadow-sm">
+                        <i class="fas fa-search mr-1"></i> Analisis Negara
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        @if($selectedCountry)
+        <div class="row">
+            <!-- Selected Country Metrics (GDP, Inflation, Population, Currency) -->
+            <div class="col-md-8">
+                <div class="card border bg-light h-100 p-3" style="border-radius: var(--radius-md);">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="font-weight-bold text-dark mb-0">
+                            <i class="fas fa-building text-primary mr-2"></i> {{ $selectedCountry->name }} ({{ $selectedCountry->code }})
+                        </h4>
+                        <span class="badge {{ $selectedCountry->risk_color == 'danger' ? 'badge-danger' : ($selectedCountry->risk_color == 'warning' ? 'badge-warning' : 'badge-success') }} px-3 py-2 font-weight-bold">
+                            {{ $selectedCountry->risk_level }} Risk
+                        </span>
+                    </div>
+
+                    <div class="row text-center mb-3">
+                        <div class="col-6 col-md-3 mb-2 mb-md-0">
+                            <div class="p-3 bg-white rounded border">
+                                <small class="text-muted font-weight-bold d-block">GDP</small>
+                                <strong class="text-primary font-weight-bold" style="font-size:1.1rem;">{{ $selectedCountry->gdp ?? '$1.2T' }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3 mb-2 mb-md-0">
+                            <div class="p-3 bg-white rounded border">
+                                <small class="text-muted font-weight-bold d-block">Inflasi</small>
+                                <strong class="text-danger font-weight-bold" style="font-size:1.1rem;">{{ $selectedCountry->inflation ?? '2.5' }}%</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-white rounded border">
+                                <small class="text-muted font-weight-bold d-block">Populasi</small>
+                                <strong class="text-dark font-weight-bold" style="font-size:1.1rem;">{{ number_format($selectedCountry->population ?? 10000000) }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-white rounded border">
+                                <small class="text-muted font-weight-bold d-block">Mata Uang</small>
+                                <strong class="text-success font-weight-bold" style="font-size:1.1rem;">{{ $selectedCountry->currency ?? 'USD' }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top text-muted" style="font-size:0.85rem;">
+                        <span><i class="fas fa-globe mr-1"></i> Region: <strong>{{ $selectedCountry->region }}</strong></span>
+                        <span><i class="fas fa-ship mr-1"></i> Status Logistik: <strong class="text-dark">{{ $selectedCountry->shipping_status }}</strong></span>
+                        <span><i class="fas fa-chart-line mr-1"></i> Trade Index: <strong>{{ $selectedCountry->trade_index }}/100</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Scoring Engine Output (PDF Hal 4 & 8) -->
+            <div class="col-md-4">
+                <div class="card border bg-dark text-white h-100 p-3 shadow-sm" style="border-radius: var(--radius-md);">
+                    <h5 class="font-weight-bold mb-2 text-warning">
+                        <i class="fas fa-calculator mr-2"></i> Risk Scoring Engine
+                    </h5>
+                    <small class="text-light mb-3 d-block">Algoritma Weighted Risk Prediction Model:</small>
+
+                    @if($riskCalculation)
+                    <div class="text-center mb-3">
+                        <div class="display-4 font-weight-bold text-white mb-0">{{ $riskCalculation['total_risk'] }}%</div>
+                        <span class="badge {{ $riskCalculation['badge_class'] }} px-3 py-1 mt-1 font-weight-bold">
+                            {{ $selectedCountry->name }} : {{ $riskCalculation['total_risk'] }} ({{ $riskCalculation['risk_level'] }})
+                        </span>
+                    </div>
+
+                    <div style="font-size: 0.8rem;" class="bg-secondary p-2 rounded mb-2">
+                        <div class="d-flex justify-content-between"><span>Weather Risk (30%):</span> <strong>{{ $riskCalculation['breakdown']['weather_risk'] }}%</strong></div>
+                        <div class="d-flex justify-content-between"><span>Inflation Risk (20%):</span> <strong>{{ $riskCalculation['breakdown']['inflation_risk'] }}%</strong></div>
+                        <div class="d-flex justify-content-between"><span>News Sentiment (40%):</span> <strong>{{ $riskCalculation['breakdown']['news_risk'] }}%</strong></div>
+                        <div class="d-flex justify-content-between"><span>Currency Risk (10%):</span> <strong>{{ $riskCalculation['breakdown']['currency_risk'] }}%</strong></div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
+
+<!-- Stat Metrics Cards Row -->
 <div class="row">
-
     <div class="col-md-3">
-        <div class="small-box bg-info">
-
+        <div class="small-box bg-info shadow-sm">
             <div class="inner">
                 <h3>{{ $countries }}</h3>
                 <p>Total Countries</p>
             </div>
-
             <div class="icon">
                 <i class="fas fa-globe"></i>
             </div>
-
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="small-box bg-success">
-
+        <div class="small-box bg-success shadow-sm">
             <div class="inner">
                 <h3>{{ $suppliers }}</h3>
                 <p>Total Suppliers</p>
             </div>
-
             <div class="icon">
                 <i class="fas fa-industry"></i>
             </div>
-
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="small-box bg-warning">
-
+        <div class="small-box bg-warning shadow-sm">
             <div class="inner">
                 <h3>{{ $products }}</h3>
                 <p>Total Products</p>
             </div>
-
             <div class="icon">
                 <i class="fas fa-box"></i>
             </div>
-
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="small-box bg-danger">
-
+        <div class="small-box bg-danger shadow-sm">
             <div class="inner">
                 <h3>{{ $highRisk }}</h3>
                 <p>High Risk Countries</p>
             </div>
-
             <div class="icon">
                 <i class="fas fa-exclamation-triangle"></i>
             </div>
-
         </div>
     </div>
-
 </div>
 
-<div class="row mb-4">
-
-    <div class="col-md-3">
-        <a href="{{ route('countries.create') }}"
-           class="btn btn-primary btn-block">
-
-            <i class="fas fa-plus"></i>
-            Add Country
-
-        </a>
-    </div>
-
-    <div class="col-md-3">
-        <a href="{{ route('suppliers.create') }}"
-           class="btn btn-success btn-block">
-
-            <i class="fas fa-truck"></i>
-            Add Supplier
-
-        </a>
-    </div>
-
-    <div class="col-md-3">
-        <a href="{{ route('reports.index') }}"
-           class="btn btn-danger btn-block">
-
-            <i class="fas fa-file"></i>
-            Reports
-
-        </a>
-    </div>
-
-    <div class="col-md-3">
-        <a href="{{ route('world.map') }}"
-           class="btn btn-warning btn-block">
-
-            <i class="fas fa-globe-americas"></i>
-            World Map
-
-        </a>
-    </div>
-
-</div>
-
+<!-- Leaflet World Map & Top Risk Table -->
 <div class="row">
-
     <div class="col-lg-8">
-
-        <div class="card">
-
-            <div class="card-header bg-primary">
-
-                <h3 class="card-title text-white">
-
-                    <i class="fas fa-map-marked-alt"></i>
-
-                    Global Risk Map
-
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h3 class="card-title font-weight-bold text-dark mb-0">
+                    <i class="fas fa-map-marked-alt text-primary mr-2"></i>
+                    Global Risk Interactive Geospatial Map
                 </h3>
-
             </div>
-
-            <div class="card-body">
-
-                <div id="worldMap"
-                     style="height:500px;">
-                </div>
-
+            <div class="card-body p-2">
+                <div id="worldMap" style="height:480px; border-radius: var(--radius-md);"></div>
             </div>
-
         </div>
-
     </div>
 
     <div class="col-lg-4">
-
-        <div class="card">
-
-            <div class="card-header bg-danger">
-
-                <h3 class="card-title text-white">
-
-                    Top Risk Countries
-
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom py-3">
+                <h3 class="card-title font-weight-bold text-dark mb-0">
+                    <i class="fas fa-exclamation-circle text-danger mr-2"></i>
+                    Top High Risk Countries
                 </h3>
-
             </div>
-
-            <div class="card-body">
-
-                @forelse($topRiskCountries as $country)
-
-                    <div class="mb-3">
-
-                        <strong>{{ $country->name }}</strong>
-
-                        <small class="float-right">
-                            {{ $country->risk_score }}%
-                        </small>
-
-                        <div class="progress mt-2">
-
-                            <div class="progress-bar bg-danger"
-
-                                 style="width: {{ $country->risk_score }}%;">
-
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    @forelse($topRiskCountries as $c)
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="text-dark">{{ $c->name }}</strong>
+                                <small class="text-muted d-block">{{ $c->region }}</small>
                             </div>
-
+                            <span class="badge {{ $c->risk_score >= 60 ? 'badge-danger' : 'badge-warning' }} px-3 py-2 font-weight-bold">
+                                {{ $c->risk_score }}% Risk
+                            </span>
                         </div>
-
-                    </div>
-
-                @empty
-
-                    <p class="text-center">
-
-                        No data available
-
-                    </p>
-
-                @endforelse
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-<div class="row mt-4">
-
-    <div class="col-lg-7">
-
-        <div class="card">
-
-            <div class="card-header bg-success">
-
-                <h3 class="card-title text-white">
-
-                    <i class="fas fa-chart-line"></i>
-
-                    Risk Trend
-
-                </h3>
-
-            </div>
-
-            <div class="card-body">
-
-                <canvas id="riskChart" height="120"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-5">
-
-        <div class="card">
-
-            <div class="card-header bg-warning">
-
-                <h3 class="card-title">
-
-                    Supplier Distribution
-
-                </h3>
-
-            </div>
-
-            <div class="card-body">
-
-                <canvas id="supplierChart" height="220"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="row mt-4">
-
-    <div class="col-lg-12">
-
-        <div class="card">
-
-            <div class="card-header bg-primary">
-
-                <h3 class="card-title text-white">
-
-                    Latest Country Risk Data
-
-                </h3>
-
-            </div>
-
-            <div class="card-body p-0">
-
-                <table class="table table-striped table-hover mb-0">
-
-                    <thead>
-
-                    <tr>
-
-                        <th>No</th>
-
-                        <th>Country</th>
-
-                        <th>Risk Score</th>
-
-                        <th>Risk Level</th>
-
-                        <th>Trade Index</th>
-
-                        <th>Status</th>
-
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    @forelse($latestCountries as $index => $country)
-
-                    <tr>
-
-                        <td>{{ $index+1 }}</td>
-
-                        <td>{{ $country->name }}</td>
-
-                        <td>{{ $country->risk_score }}%</td>
-
-                        <td>{{ $country->risk_level }}</td>
-
-                        <td>{{ $country->trade_index }}</td>
-
-                        <td>
-
-                            @if($country->risk_level=='High')
-
-                                <span class="badge badge-danger">High</span>
-
-                            @elseif($country->risk_level=='Medium')
-
-                                <span class="badge badge-warning">Medium</span>
-
-                            @else
-
-                                <span class="badge badge-success">Low</span>
-
-                            @endif
-
-                        </td>
-
-                    </tr>
-
                     @empty
-
-                    <tr>
-
-                        <td colspan="6" class="text-center">
-
-                            No data available
-
-                        </td>
-
-                    </tr>
-
+                        <div class="text-center py-4 text-muted">No high risk countries</div>
                     @endforelse
-
-                    </tbody>
-
-                </table>
-
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
-<div class="row mt-4">
-
-    <div class="col-lg-6">
-
-        <div class="card">
-
-            <div class="card-header bg-info">
-
-                <h3 class="card-title text-white">
-
-                    Recent Suppliers
-
-                </h3>
-
-            </div>
-
-            <div class="card-body p-0">
-
-                <table class="table table-hover mb-0">
-
-                    <thead>
-
-                    <tr>
-
-                        <th>Supplier</th>
-
-                        <th>Country</th>
-
-                        <th>Status</th>
-
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    @forelse($recentSuppliers as $supplier)
-
-                    <tr>
-
-                        <td>{{ $supplier->name }}</td>
-
-                        <td>{{ $supplier->country->name ?? '-' }}</td>
-
-                        <td>
-
-                            @if($supplier->supply_status=='Active')
-
-                                <span class="badge badge-success">
-
-                                    Active
-
-                                </span>
-
-                            @else
-
-                                <span class="badge badge-secondary">
-
-                                    Inactive
-
-                                </span>
-
-                            @endif
-
-                        </td>
-
-                    </tr>
-
-                    @empty
-
-                    <tr>
-
-                        <td colspan="3" class="text-center">
-
-                            No supplier data
-
-                        </td>
-
-                    </tr>
-
-                    @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-6">
-
-        <div class="card">
-
-            <div class="card-header bg-danger">
-
-                <h3 class="card-title text-white">
-
-                    Dashboard Summary
-
-                </h3>
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="alert alert-success">
-
-                    Countries :
-                    <strong>{{ $countries }}</strong>
-
-                </div>
-
-                <div class="alert alert-primary">
-
-                    Suppliers :
-                    <strong>{{ $suppliers }}</strong>
-
-                </div>
-
-                <div class="alert alert-warning">
-
-                    Products :
-                    <strong>{{ $products }}</strong>
-
-                </div>
-
-                <div class="alert alert-danger">
-
-                    High Risk :
-                    <strong>{{ $highRisk }}</strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-@stop
-
-@section('css')
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-<style>
-
-.small-box{
-    border-radius:15px;
-}
-
-.card{
-    border-radius:15px;
-}
-
-.progress{
-    height:20px;
-}
-
-#worldMap{
-    border-radius:15px;
-}
-
-#liveClock{
-    font-size:15px;
-    font-weight:bold;
-}
-
-body.dark-mode{
-    background:#111827;
-}
-
-body.dark-mode .card{
-    background:#1f2937;
-    color:white;
-}
-
-body.dark-mode table{
-    color:white;
-}
-
-body.dark-mode .table thead{
-    background:#374151;
-}
-
-</style>
 
 @stop
 
 @section('js')
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Live Clock
+    setInterval(function () {
+        const now = new Date();
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString() + ' | ' + now.toLocaleDateString();
+    }, 1000);
 
-function updateClock(){
+    // Leaflet World Map
+    var map = L.map('worldMap').setView([20, 10], 2);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 18,
+        attribution: '&copy; CARTO'
+    }).addTo(map);
 
-    let now=new Date();
+    @foreach($mapCountries as $country)
+    @if($country->latitude && $country->longitude)
+    (function() {
+        var color = 'green';
+        @if($country->risk_score >= 60)
+            color = 'red';
+        @elseif($country->risk_score >= 35)
+            color = 'orange';
+        @endif
 
-    document.getElementById("liveClock").innerHTML=
-    now.toLocaleDateString()+"<br>"+now.toLocaleTimeString();
-
-}
-
-updateClock();
-
-setInterval(updateClock,1000);
-
+        L.circleMarker([{{ $country->latitude }}, {{ $country->longitude }}], {
+            radius: 8,
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.8
+        }).addTo(map).bindPopup(`
+            <div style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <strong>${'{{ $country->name }}'}</strong><br>
+                Risk Score: <strong>${'{{ $country->risk_score }}'}%</strong><br>
+                GDP: ${'{{ $country->gdp ?? "-" }}'}<br>
+                Inflasi: ${'{{ $country->inflation ?? "-" }}'}%
+            </div>
+        `);
+    })();
+    @endif
+    @endforeach
+});
 </script>
-
-<script>
-
-var map=L.map('worldMap').setView([20,0],2);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-attribution:'© OpenStreetMap'
-}).addTo(map);
-
-@foreach($mapCountries as $country)
-
-L.marker([
-{{ $country->latitude }},
-{{ $country->longitude }}
-])
-
-.addTo(map)
-
-.bindPopup(
-
-"<b>{{ $country->name }}</b><br>"+
-"Risk : {{ $country->risk_level }}<br>"+
-"Score : {{ $country->risk_score }}"
-
-);
-
-@endforeach
-
-</script>
-
-<script>
-
-new Chart(document.getElementById('riskChart'),{
-
-type:'line',
-
-data:{
-
-labels:[
-'Jan',
-'Feb',
-'Mar',
-'Apr',
-'May',
-'Jun'
-],
-
-datasets:[{
-
-label:'Risk Index',
-
-data:[
-25,
-35,
-45,
-40,
-60,
-55
-],
-
-fill:false,
-
-borderWidth:3
-
-}]
-
-}
-
-});
-
-new Chart(document.getElementById('supplierChart'),{
-
-type:'doughnut',
-
-data:{
-
-labels:[
-'Asia',
-'Europe',
-'America',
-'Africa'
-],
-
-datasets:[{
-
-data:[
-45,
-25,
-20,
-10
-]
-
-}]
-
-}
-
-});
-
-</script>
-
-<script>
-
-document.querySelectorAll(".small-box").forEach(function(box){
-
-box.addEventListener("mouseenter",function(){
-
-box.style.transform="translateY(-6px)";
-box.style.transition=".3s";
-
-});
-
-box.addEventListener("mouseleave",function(){
-
-box.style.transform="translateY(0px)";
-
-});
-
-});
-
-</script>
-
 @stop

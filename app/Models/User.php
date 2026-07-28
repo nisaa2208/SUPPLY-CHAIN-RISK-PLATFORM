@@ -12,7 +12,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass Assignment
      */
     protected $fillable = [
         'name',
@@ -22,7 +22,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden.
+     * Hidden Attributes
      */
     protected $hidden = [
         'password',
@@ -30,11 +30,33 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Attribute Casting
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function watchlists()
+    {
+        return $this->hasMany(Watchlist::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    public function isAdmin()
+    {
+        return $this->role === 'Administrator';
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -49,7 +71,9 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=0D8ABC&color=fff';
+        return 'https://ui-avatars.com/api/?name=' .
+            urlencode($this->name) .
+            '&background=0D8ABC&color=fff';
     }
 
     public function adminlte_desc()

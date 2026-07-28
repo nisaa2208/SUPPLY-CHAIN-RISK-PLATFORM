@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\Product;
-use App\Models\Supplier;
 
 class NotificationController extends Controller
 {
@@ -15,35 +14,26 @@ class NotificationController extends Controller
         // High Risk Countries
         foreach (Country::where('risk_score', '>=', 80)->get() as $country) {
             $notifications->push([
-                'icon' => 'fas fa-globe',
-                'color' => 'danger',
+                'type' => 'danger',
+                'icon' => 'fas fa-exclamation-triangle',
                 'title' => 'High Risk Country',
-                'message' => $country->name . ' has a very high risk score (' . $country->risk_score . ').',
-                'time' => now()->format('d M Y H:i'),
+                'message' => "{$country->name} memiliki Risk Score {$country->risk_score}.",
+                'time' => $country->updated_at,
             ]);
         }
 
-        // High Risk Suppliers
-        foreach (Supplier::where('risk_score', '>=', 80)->get() as $supplier) {
+        // Critical Shipping Products
+        foreach (Product::where('shipping_status', 'Critical')->get() as $product) {
             $notifications->push([
-                'icon' => 'fas fa-truck',
-                'color' => 'warning',
-                'title' => 'Supplier Alert',
-                'message' => $supplier->name . ' is classified as High Risk.',
-                'time' => now()->format('d M Y H:i'),
+                'type' => 'warning',
+                'icon' => 'fas fa-shipping-fast',
+                'title' => 'Critical Shipping',
+                'message' => "Produk {$product->name} memiliki status pengiriman Critical.",
+                'time' => $product->updated_at,
             ]);
         }
 
-        // High Risk Products
-        foreach (Product::where('risk_score', '>=', 80)->get() as $product) {
-            $notifications->push([
-                'icon' => 'fas fa-box-open',
-                'color' => 'info',
-                'title' => 'Product Alert',
-                'message' => $product->name . ' has a high supply chain risk.',
-                'time' => now()->format('d M Y H:i'),
-            ]);
-        }
+        $notifications = $notifications->sortByDesc('time');
 
         return view('notifications.index', compact('notifications'));
     }

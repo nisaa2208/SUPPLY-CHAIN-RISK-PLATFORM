@@ -25,6 +25,10 @@ class Country extends Model
         'supply_status',
         'latitude',
         'longitude',
+        'gdp',
+        'inflation',
+        'population',
+        'currency',
     ];
 
     /**
@@ -53,6 +57,16 @@ class Country extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function riskScores()
+    {
+        return $this->hasMany(RiskScore::class);
+    }
+
+    public function watchlists()
+    {
+        return $this->hasMany(Watchlist::class);
     }
 
     /*
@@ -113,6 +127,16 @@ class Country extends Model
         return '<span class="badge badge-success">Low</span>';
     }
 
+    public function getFormattedRiskScoreAttribute()
+    {
+        return $this->risk_score . ' %';
+    }
+
+    public function getCountryFlagAttribute()
+    {
+        return strtolower($this->code);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helper Methods
@@ -132,6 +156,11 @@ class Country extends Model
     public function isLowRisk()
     {
         return $this->risk_score < 50;
+    }
+
+    public function isCritical()
+    {
+        return $this->shipping_status === 'Critical';
     }
 
     /*

@@ -62,7 +62,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-'logo' => '<b>Global</b> Supply Chain',
+'logo' => '<i class="fas fa-shield-alt text-primary mr-2"></i><b>Supply</b><span class="text-primary">Risk</span>',
 
 'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
 
@@ -338,255 +338,56 @@ return [
     |
     */
 'menu' => [
-
-    /*
-    |--------------------------------------------------------------------------
-    | DASHBOARD
-    |--------------------------------------------------------------------------
-    */
-
     [
         'text' => 'Dashboard',
         'route' => 'dashboard',
-        'icon' => 'fas fa-home',
-        'label' => 'NEW',
-        'label_color' => 'success',
+        'icon' => 'fas fa-tachometer-alt text-primary',
     ],
-
     [
-        'text' => 'Analytics',
-        'route' => 'analytics',
-        'icon' => 'fas fa-chart-line',
-        'label' => 'LIVE',
-        'label_color' => 'danger',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | MASTER DATA
-    |--------------------------------------------------------------------------
-    */
-
-    [
-        'header' => 'MASTER DATA',
-    ],
-
-    [
-        'text' => 'Countries',
+        'text' => 'Informasi Negara',
         'route' => 'countries.index',
-        'icon' => 'fas fa-globe-americas',
+        'icon' => 'fas fa-flag text-info',
     ],
-
     [
-        'text' => 'Suppliers',
-        'route' => 'suppliers.index',
-        'icon' => 'fas fa-truck',
+        'text' => 'Analisis Risiko',
+        'route' => 'analytics',
+        'icon' => 'fas fa-chart-pie text-danger',
     ],
-
     [
-        'text' => 'Products',
-        'route' => 'products.index',
-        'icon' => 'fas fa-box-open',
+        'text' => 'Monitoring Cuaca',
+        'route' => 'weather.index',
+        'icon' => 'fas fa-cloud-sun text-warning',
     ],
-
     [
-        'text' => 'Users',
-        'route' => 'users.index',
-        'icon' => 'fas fa-users',
+        'text' => 'Nilai Tukar Mata Uang',
+        'route' => 'exchange.index',
+        'icon' => 'fas fa-coins text-success',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | MONITORING
-    |--------------------------------------------------------------------------
-    */
-
     [
-        'header' => 'MONITORING',
-    ],
-
-    [
-        'text' => 'Monitoring',
-        'route' => 'monitoring',
-        'icon' => 'fas fa-chart-area',
-    ],
-
-    [
-        'text' => 'World Map',
-        'route' => 'world.map',
-        'icon' => 'fas fa-globe',
-    ],
-
-    [
-        'text' => 'Global Alert',
-        'route' => 'global.alert',
-        'icon' => 'fas fa-exclamation-triangle',
-    ],
-
-    [
-        'text' => 'Notifications',
-        'route' => 'notifications',
-        'icon' => 'fas fa-bell',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | REPORTS
-    |--------------------------------------------------------------------------
-    */
-
-    [
-        'header' => 'REPORTS',
-    ],
-
-    [
-        'text' => 'Reports',
-        'route' => 'reports.index',
-        'icon' => 'fas fa-file-alt',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | INFORMATION
-    |--------------------------------------------------------------------------
-    */
-
-    [
-        'header' => 'INFORMATION',
-    ],
-
-    [
-        'text' => 'News',
+        'text' => 'Berita Global',
         'route' => 'news.index',
-        'icon' => 'fas fa-newspaper',
+        'icon' => 'fas fa-newspaper text-indigo',
     ],
-
     [
-        'text' => 'Search',
-        'route' => 'search',
-        'icon' => 'fas fa-search',
+        'text' => 'Lokasi Pelabuhan',
+        'route' => 'ports.index',
+        'icon' => 'fas fa-anchor text-cyan',
     ],
-
     [
-        'text' => 'About',
-        'route' => 'about',
-        'icon' => 'fas fa-info-circle',
+        'text' => 'Visualisasi Data',
+        'route' => 'world.map',
+        'icon' => 'fas fa-map-marked-alt text-teal',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | SYSTEM
-    |--------------------------------------------------------------------------
-    */
-
     [
-        'header' => 'SYSTEM',
+        'text' => 'Perbandingan Negara',
+        'route' => 'countries.compare',
+        'icon' => 'fas fa-balance-scale text-purple',
     ],
-
     [
-        'text' => 'Profile',
-        'route' => 'profile.edit',
-        'icon' => 'fas fa-user-cog',
+        'text' => 'Daftar Favorit',
+        'route' => 'favorites.index',
+        'icon' => 'fas fa-star text-warning',
     ],
-
-    [
-        'text' => 'Clear Cache',
-        'route' => 'clear.cache',
-        'icon' => 'fas fa-broom',
-    ],
-
-    // ===========================
-    // REPORTS
-    // ===========================
-
-    [
-        'text' => 'Reports',
-        'icon' => 'fas fa-file-alt',
-
-        'submenu' => [
-
-            [
-                'text' => 'Reports',
-                'route' => 'reports.index',
-                'icon' => 'fas fa-file-alt',
-            ],
-
-            [
-                'text' => 'Export PDF',
-                'route' => 'export.pdf',
-                'icon' => 'fas fa-file-pdf',
-            ],
-
-            [
-                'text' => 'Export Excel',
-                'route' => 'export.excel',
-                'icon' => 'fas fa-file-excel',
-            ],
-
-        ],
-
-    ],
-
-    // ===========================
-    // API SERVICES
-    // ===========================
-
-    [
-        'text' => 'API Services',
-        'icon' => 'fas fa-plug',
-        'label' => 'API',
-        'label_color' => 'danger',
-
-        'submenu' => [
-
-            [
-                'text' => 'Countries API',
-                'route' => 'api.countries',
-                'icon' => 'fas fa-database',
-            ],
-
-            [
-                'text' => 'Weather API',
-                'route' => 'api.weather',
-                'icon' => 'fas fa-cloud-sun',
-            ],
-
-            [
-                'text' => 'Exchange Rate',
-                'route' => 'api.exchange',
-                'icon' => 'fas fa-dollar-sign',
-            ],
-
-            [
-                'text' => 'World Bank',
-                'route' => 'api.worldbank',
-                'icon' => 'fas fa-university',
-            ],
-
-        ],
-
-    ],
-
-    // ===========================
-    // ACCOUNT
-    // ===========================
-
-    [
-        'header' => 'ACCOUNT',
-    ],
-
-    [
-        'text' => 'Profile',
-        'route' => 'profile.edit',
-        'icon' => 'fas fa-user-circle',
-    ],
-
-    [
-        'text' => 'About',
-        'route' => 'about',
-        'icon' => 'fas fa-info-circle',
-    ],
-
 ],
     /*
     |--------------------------------------------------------------------------
@@ -622,78 +423,57 @@ return [
     |
     */
 
-    'plugins' => [
-        'Datatables' => [
-    'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
-                ],
+  'plugins' => [
+
+    'Datatables' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => 'https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js',
             ],
-        ],
-        'Select2' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
-                ],
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => 'https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js',
             ],
-        ],
-        'Chartjs' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
-                ],
-            ],
-        ],
-        'Sweetalert2' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
-                ],
-            ],
-        ],
-        'Pace' => [
-            'active' =>true,
-            'files' => [
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-center-radar.min.css',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
-                ],
+            [
+                'type' => 'css',
+                'asset' => false,
+                'location' => 'https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css',
             ],
         ],
     ],
+
+    'Chartjs' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => 'https://cdn.jsdelivr.net/npm/chart.js',
+            ],
+        ],
+    ],
+
+    'Leaflet' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'css',
+                'asset' => false,
+                'location' => 'https://unpkg.com/leaflet/dist/leaflet.css',
+            ],
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => 'https://unpkg.com/leaflet/dist/leaflet.js',
+            ],
+        ],
+    ],
+
+],
 
     /*
     |--------------------------------------------------------------------------

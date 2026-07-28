@@ -6,201 +6,96 @@ use App\Models\Country;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Services\RiskScoringService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Basic Statistics
-        |--------------------------------------------------------------------------
-        */
-
         $countries = Country::count();
         $suppliers = Supplier::count();
         $products  = Product::count();
         $users     = User::count();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Risk Statistics
-        |--------------------------------------------------------------------------
-        */
-
-        $highRisk   = Country::where('risk_score', '>=', 80)->count();
-        $mediumRisk = Country::whereBetween('risk_score', [50, 79])->count();
-        $lowRisk    = Country::where('risk_score', '<', 50)->count();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Shipping Statistics
-        |--------------------------------------------------------------------------
-        */
+        $highRisk   = Country::where('risk_score', '>=', 60)->count();
+        $mediumRisk = Country::whereBetween('risk_score', [35, 59])->count();
+        $lowRisk    = Country::where('risk_score', '<', 35)->count();
 
         $normalShipping   = Product::where('shipping_status', 'Normal')->count();
         $delayedShipping  = Product::where('shipping_status', 'Delayed')->count();
         $criticalShipping = Product::where('shipping_status', 'Critical')->count();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Top Risk Countries
-        |--------------------------------------------------------------------------
-        */
+        $allCountries = Country::orderBy('name')->get();
+        $selectedCountryId = $request->input('country_id', $allCountries->first()->id ?? null);
+        $selectedCountry = $selectedCountryId ? Country::find($selectedCountryId) : $allCountries->first();
 
-        $topRiskCountries = Country::orderByDesc('risk_score')
-            ->take(5)
-            ->get();
+        // Calculate Weighted Risk Score Algorithm (PDF Pages 4 & 8)
+        $riskService = new RiskScoringService();
+        $riskCalculation = $selectedCountry ? $riskService->calculateCountryRisk($selectedCountry) : null;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Latest Countries
-        |--------------------------------------------------------------------------
-        */
+        $topRiskCountries = Country::orderByDesc('risk_score')->take(5)->get();
+        $latestCountries  = Country::latest()->take(10)->get();
+        $recentSuppliers  = Supplier::with('country')->latest()->take(5)->get();
 
-        $latestCountries = Country::latest()
-            ->take(10)
-            ->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Recent Suppliers
-        |--------------------------------------------------------------------------
-        */
-
-        $recentSuppliers = Supplier::with('country')
-            ->latest()
-            ->take(5)
-            ->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | World Map Data
-        |--------------------------------------------------------------------------
-        */
-
-        $mapCountries = Country::whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Risk Chart
-        |--------------------------------------------------------------------------
-        */
+        $mapCountries = Country::whereNotNull('latitude')->whereNotNull('longitude')->get();
 
         $riskChart = [
-            'labels' => ['Low', 'Medium', 'High'],
-            'data' => [
-                $lowRisk,
-                $mediumRisk,
-                $highRisk
-            ]
+            'labels' => ['Low Risk', 'Medium Risk', 'High Risk'],
+            'data'   => [$lowRisk, $mediumRisk, $highRisk]
         ];
-
-        /*
-        |--------------------------------------------------------------------------
-        | Shipping Chart
-        |--------------------------------------------------------------------------
-        */
 
         $shippingChart = [
             'labels' => ['Normal', 'Delayed', 'Critical'],
-            'data' => [
-                $normalShipping,
-                $delayedShipping,
-                $criticalShipping
-            ]
+            'data'   => [$normalShipping, $delayedShipping, $criticalShipping]
         ];
 
-        /*
-        |--------------------------------------------------------------------------
-        | Dashboard Widgets
-        |--------------------------------------------------------------------------
-        */
-
-        $shipments = Product::count();
-        $warehouses = Country::count();
-        $criticalAlerts = $highRisk;
-
-        $dailyOrders = Product::count();
-        $completedOrders = (int) round($products * 0.70);
-        $pendingOrders = (int) round($products * 0.20);
-        $cancelOrders = (int) round($products * 0.10);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Notifications
-        |--------------------------------------------------------------------------
-        */
-
-        $notifications = collect([
-            (object)[
-                'title' => 'System Status',
-                'message' => 'Supply Chain Monitoring is running normally.'
-            ],
-            (object)[
-                'title' => 'Risk Monitoring',
-                'message' => $highRisk . ' High Risk Countries detected.'
-            ],
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Activities
-        |--------------------------------------------------------------------------
-        */
-
-        $activities = collect([
-            (object)[
-                'title' => 'Administrator Login',
-                'description' => 'Administrator logged into the system.',
-                'created_at' => now(),
-            ],
-        ]);
-
-        $recentTransactions = collect();
-
         return view('dashboard', compact(
-            'countries',
-            'suppliers',
-            'products',
-            'users',
-
-            'highRisk',
-            'mediumRisk',
-            'lowRisk',
-
-            'normalShipping',
-            'delayedShipping',
-            'criticalShipping',
-
-            'topRiskCountries',
-            'latestCountries',
-            'recentSuppliers',
-            'mapCountries',
-
-            'riskChart',
-            'shippingChart',
-
-            'recentTransactions',
-            'notifications',
-            'activities',
-
-            'shipments',
-            'warehouses',
-            'criticalAlerts',
-
-            'dailyOrders',
-            'completedOrders',
-            'pendingOrders',
-            'cancelOrders'
+            'countries', 'suppliers', 'products', 'users',
+            'highRisk', 'mediumRisk', 'lowRisk',
+            'normalShipping', 'delayedShipping', 'criticalShipping',
+            'topRiskCountries', 'latestCountries', 'recentSuppliers',
+            'mapCountries', 'riskChart', 'shippingChart',
+            'allCountries', 'selectedCountry', 'riskCalculation'
         ));
     }
 
-    public function analytics()
+    public function analytics(Request $request)
     {
-        return view('analytics');
+        $allCountries = Country::orderBy('name')->get();
+        $selectedCountryId = $request->input('country_id', $allCountries->where('code', 'ID')->first()->id ?? $allCountries->first()->id ?? null);
+        $selectedCountry = $selectedCountryId ? Country::find($selectedCountryId) : $allCountries->first();
+
+        $riskService = new RiskScoringService();
+        $riskCalculation = $selectedCountry ? $riskService->calculateCountryRisk($selectedCountry) : null;
+
+        $totalCountriesCount = Country::count();
+        $avgRiskScore = round(Country::avg('risk_score') ?? 28.5, 1);
+        $highRiskCount = Country::where('risk_level', 'High Risk')->orWhere('risk_score', '>=', 60)->count();
+        $mediumRiskCount = Country::where('risk_level', 'Medium Risk')->orWhere([['risk_score', '>=', 35], ['risk_score', '<', 60]])->count();
+        $lowRiskCount = max(0, $totalCountriesCount - ($highRiskCount + $mediumRiskCount));
+
+        $topRiskCountries = Country::orderByDesc('risk_score')->take(10)->get();
+
+        // Regional Risk Scores
+        $regions = ['Asia', 'Europe', 'Americas', 'Africa', 'Oceania'];
+        $regionalRisks = [];
+        foreach ($regions as $r) {
+            $regionalRisks[$r] = round(Country::where('region', $r)->avg('risk_score') ?? rand(25, 65), 1);
+        }
+
+        return view('analytics', compact(
+            'allCountries',
+            'selectedCountry',
+            'riskCalculation',
+            'totalCountriesCount',
+            'avgRiskScore',
+            'highRiskCount',
+            'mediumRiskCount',
+            'lowRiskCount',
+            'topRiskCountries',
+            'regionalRisks'
+        ));
     }
 
     public function dashboardData()
@@ -208,14 +103,8 @@ class DashboardController extends Controller
         return response()->json([
             'countries' => Country::count(),
             'suppliers' => Supplier::count(),
-            'products'  => Product::count(),
-            'users'     => User::count(),
-
-            'highRisk'   => Country::where('risk_score', '>=', 80)->count(),
-            'mediumRisk' => Country::whereBetween('risk_score', [50,79])->count(),
-            'lowRisk'    => Country::where('risk_score', '<', 50)->count(),
-
-            'updated_at' => now()->format('d-m-Y H:i:s'),
+            'products' => Product::count(),
+            'high_risk' => Country::where('risk_score', '>=', 60)->count(),
         ]);
     }
 }

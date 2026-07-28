@@ -3,12 +3,22 @@
 @section('title','Global Alert')
 
 @section('content_header')
-
-<h1>
-    <i class="fas fa-exclamation-triangle text-danger"></i>
-    Global Supply Chain Alert Center
-</h1>
-
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+        <h1 class="font-weight-bold mb-1" style="font-size: 1.75rem;">
+            <i class="fas fa-exclamation-triangle text-danger mr-2"></i>
+            Global Supply Chain Alert Center
+        </h1>
+        <div class="text-muted d-flex align-items-center" style="font-size: 0.88rem;">
+            <span class="live-dot mr-2"></span> Automated Incident Tracking & Early Warning Risk Notification System
+        </div>
+    </div>
+    <div>
+        <span class="badge badge-danger px-3 py-2 shadow-sm" style="font-size:0.85rem;">
+            <i class="fas fa-bell-exclamation mr-1"></i> Active Incident Monitor
+        </span>
+    </div>
+</div>
 @stop
 
 @section('content')

@@ -40,111 +40,112 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Dashboard
+    | 1. Dashboard
     |--------------------------------------------------------------------------
     */
-
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | 2. Informasi Negara & 9. Perbandingan Negara
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/countries/compare', [CountryController::class, 'compare'])
+        ->name('countries.compare');
+
+    Route::post('/countries/sync-live', [CountryController::class, 'syncLiveApi'])
+        ->name('countries.sync.live');
+
+    Route::resource('countries', CountryController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 3. Analisis Risiko
+    |--------------------------------------------------------------------------
+    */
     Route::get('/analytics', [DashboardController::class, 'analytics'])
         ->name('analytics');
 
-    Route::get('/api/dashboard-data', [DashboardController::class, 'dashboardData'])
-        ->name('dashboard.data');
+    /*
+    |--------------------------------------------------------------------------
+    | 4. Monitoring Cuaca
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/weather', [WeatherController::class, 'index'])
+        ->name('weather.index');
+
+    Route::get('/api/weather/data', [WeatherController::class, 'getWeatherData'])
+        ->name('weather.data');
 
     /*
     |--------------------------------------------------------------------------
-    | About
+    | 5. Nilai Tukar Mata Uang
     |--------------------------------------------------------------------------
     */
-
-    Route::get('/about', [AboutController::class, 'index'])
-        ->name('about');
+    Route::get('/exchange-rate', [ExchangeRateController::class, 'index'])
+        ->name('exchange.index');
 
     /*
     |--------------------------------------------------------------------------
-    | Master Data
+    | 6. Berita Global
     |--------------------------------------------------------------------------
     */
-
-    Route::resource('countries', CountryController::class);
-    Route::resource('suppliers', SupplierController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('users', UserController::class);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Monitoring & World Map
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/monitoring', [MonitoringController::class, 'index'])
-        ->name('monitoring');
-
-    Route::get('/world-map', [CountryController::class, 'map'])
-        ->name('world.map');
-
-    Route::get('/api/world-map', [CountryController::class, 'mapData'])
-        ->name('api.world.map');
-
-    Route::get('/global-alert', [GlobalAlertController::class, 'index'])
-        ->name('global.alert');
-
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->name('notifications');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Reports
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('reports', ReportController::class);
-
-    Route::get('/export/pdf', [ExportController::class, 'exportPDF'])
-        ->name('export.pdf');
-
-    Route::get('/export/excel', [ExportController::class, 'exportExcel'])
-        ->name('export.excel');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Search
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/search', [SearchController::class, 'index'])
-        ->name('search');
-
-    /*
-    |--------------------------------------------------------------------------
-    | News
-    |--------------------------------------------------------------------------
-    */
-
     Route::get('/news', [NewsController::class, 'index'])
         ->name('news.index');
 
+    Route::get('/api/news/live', [NewsController::class, 'getLiveNews'])
+        ->name('news.live');
+
     /*
     |--------------------------------------------------------------------------
-    | External API
+    | 7. Lokasi Pelabuhan
     |--------------------------------------------------------------------------
     */
+    Route::get('/ports', [\App\Http\Controllers\PortController::class, 'index'])
+        ->name('ports.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | 8. Visualisasi Data
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/world-map', [CountryController::class, 'map'])
+        ->name('world.map');
+
+    /*
+    |--------------------------------------------------------------------------
+    | 10. Daftar Favorit
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/favorites', [\App\Http\Controllers\WatchlistController::class, 'index'])
+        ->name('favorites.index');
+
+    Route::post('/favorites/toggle/{country}', [\App\Http\Controllers\WatchlistController::class, 'toggle'])
+        ->name('favorites.toggle');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Secondary Resources & Management
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('reports', ReportController::class);
+    Route::get('/export/pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');
+    Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
+    Route::get('/global-alert', [GlobalAlertController::class, 'index'])->name('global.alert');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::get('/about', [AboutController::class, 'index'])->name('about');
 
     Route::prefix('api')->group(function () {
-
-        Route::get('/countries', [ApiController::class, 'countries'])
-            ->name('api.countries');
-
-        Route::get('/weather', [WeatherController::class, 'index'])
-            ->name('api.weather');
-
-        Route::get('/exchange-rate', [ExchangeRateController::class, 'index'])
-            ->name('api.exchange');
-
-        Route::get('/world-bank', [WorldBankController::class, 'index'])
-            ->name('api.worldbank');
+        Route::get('/countries', [ApiController::class, 'countries'])->name('api.countries');
+        Route::get('/weather', [WeatherController::class, 'index'])->name('api.weather');
+        Route::get('/exchange-rate', [ExchangeRateController::class, 'index'])->name('api.exchange');
+        Route::get('/world-bank', [WorldBankController::class, 'index'])->name('api.worldbank');
     });
 
     /*
@@ -195,6 +196,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Public REST API Endpoints (Project Final Specifications - PDF Page 9)
+|--------------------------------------------------------------------------
+*/
+Route::get('/api/countries', [ApiController::class, 'apiCountries'])->name('rest.countries');
+Route::get('/api/countries/compare/live', [CountryController::class, 'compareLive'])->name('countries.compare.live');
+Route::get('/api/risk', [ApiController::class, 'apiRisk'])->name('rest.risk');
+Route::get('/api/ports', [ApiController::class, 'apiPorts'])->name('rest.ports');
+Route::get('/api/ports/live', [\App\Http\Controllers\PortController::class, 'getLivePorts'])->name('ports.live');
+Route::get('/api/news', [ApiController::class, 'apiNews'])->name('rest.news');
+Route::get('/api/news/live', [NewsController::class, 'getLiveNews'])->name('news.live');
+Route::get('/api/currency', [ApiController::class, 'apiCurrency'])->name('rest.currency');
+Route::get('/api/currency/live', [ExchangeRateController::class, 'getLiveRates'])->name('exchange.live');
+
+/*
+|--------------------------------------------------------------------------
 | Fallback
 |--------------------------------------------------------------------------
 */
@@ -202,11 +218,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::fallback(function () {
     return redirect()->route('dashboard');
 });
-
-/*
-|--------------------------------------------------------------------------
-| Authentication
-|--------------------------------------------------------------------------
-*/
 
 require __DIR__.'/auth.php';
