@@ -421,6 +421,17 @@ return [
         'icon' => 'fas fa-brain text-purple',
         'can' => 'admin-only',
     ],
+    ['header' => 'AKUN'],
+    [
+        'text' => 'Profil Saya',
+        'route' => 'profile.edit',
+        'icon' => 'fas fa-user-circle text-info',
+    ],
+    [
+        'text' => 'Logout',
+        'url'  => 'logout',
+        'icon' => 'fas fa-sign-out-alt text-danger',
+    ],
 ],
     /*
     |--------------------------------------------------------------------------
